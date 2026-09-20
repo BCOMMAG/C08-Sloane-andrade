@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { OFFICE_INFO } from "@/lib/data";
 import { Award, UserCheck, Scale, ShieldCheck } from "lucide-react";
@@ -19,7 +19,7 @@ export function InstitutionalPillars() {
     },
     {
       icon: Scale,
-      metric: "Artesanal",
+      metric: "Personalizado",
       title: "Estratégia Sob Medida",
       desc: "Análise aprofundada da realidade do cliente para buscar a solução mais célere, seja via acordo extrajudicial ou via judicial.",
     },

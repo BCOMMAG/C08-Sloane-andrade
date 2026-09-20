@@ -78,7 +78,7 @@ export function About() {
             <div className="space-y-4">
               <h3 className="font-heading text-xl font-bold text-[var(--text-main)] flex items-center gap-2">
                 <Sparkles className="w-5 h-5 text-[#A6766A]" />
-                <span>Advocacia Artesanal, Próxima e Resolutiva</span>
+                <span>Advocacia Personalizada, Próxima e Resolutiva</span>
               </h3>
               <p className="font-body text-sm sm:text-base text-[var(--text-main)] leading-relaxed font-normal">
                 Com mais de 10 anos de prática forense consolidada em Guaíra/SP e comarcas paulistas, a Dra. Sloane Ferreira de Andrade conduz uma advocacia estratégica que prioriza o contato direto com a titular em todas as fases do processo. Cada caso é examinado sob medida para buscar a resposta mais rápida e segura, seja por via consensual extrajudicial ou contenciosa combativa.
@@ -208,7 +208,7 @@ export function About() {
                 Nossa Visão
               </span>
               <h3 className="font-heading text-lg font-bold text-[var(--text-main)] mb-3">
-                Referência em Advocacia Artesanal
+                Referência em Advocacia Personalizada
               </h3>
               <p className="font-body text-xs sm:text-sm text-[var(--text-muted)] leading-relaxed">
                 {OFFICE_INFO.pillars.vision}

@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import Image from "next/image";
 import Link from "next/link";
@@ -69,7 +69,7 @@ export function Hero() {
         <div className="pb-2 sm:pb-4 lg:pb-4 max-w-3xl mt-6 sm:mt-8 lg:mt-auto animate-fade-in-up">
           
           <p className="font-body text-xs sm:text-base lg:text-lg text-gray-200 max-w-2xl leading-relaxed mb-6 font-normal drop-shadow-sm">
-            Advocacia artesanal e humanizada com mais de 10 anos de experiência prática em Direito do Trabalho, Previdenciário/Acidentário, Família e Cível. Atendimento direto e dedicado com a titular em Guaíra/SP e região.
+            Advocacia personalizada e humanizada com mais de 10 anos de experiência prática em Direito do Trabalho, Previdenciário/Acidentário, Família e Cível. Atendimento direto e dedicado com a titular em Guaíra/SP e região.
           </p>
 
           {/* CTAs com Hover e Microinterações */}
@@ -98,7 +98,7 @@ export function Hero() {
             <div className="flex items-center gap-2.5">
               <span className="bullet-indicator text-[#D4A396]" />
               <span className="font-heading uppercase text-xs tracking-widest text-white/90 font-bold">
-                Guaíra / SP • Advocacia Artesanal
+                Guaíra / SP • Advocacia Personalizada
               </span>
             </div>
             <div className="flex items-center gap-4 text-xs font-heading text-white/80">

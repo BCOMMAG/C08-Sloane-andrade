@@ -1,4 +1,4 @@
-﻿export interface PracticeArea {
+export interface PracticeArea {
   id: string;
   code: string;
   title: string;
@@ -71,7 +71,7 @@ export const OFFICE_INFO = {
   },
   pillars: {
     mission: "Oferecer assessoria jurídica de excelência nas áreas do Direito Civil e do Trabalho, combinando rigor técnico, empatia e estratégia combativa para assegurar a tranquilidade e a justiça para cada cliente.",
-    vision: "Ser referência regional e estadual em advocacia artesanal, reconhecida pelo acolhimento caloroso, transparência irrestrita e resolutividade sólida.",
+    vision: "Ser referência regional e estadual em advocacia personalizada, reconhecida pelo acolhimento caloroso, transparência irrestrita e resolutividade sólida.",
     values: [
       "Ética e Probidade Inegociáveis (CFOAB)",
       "Atendimento Pessoal, Próximo e Humanizado",
@@ -403,7 +403,7 @@ export const WORK_STEPS: Step[] = [
   },
   {
     number: "03",
-    title: "Elaboração Técnica & Artesanal",
+    title: "Elaboração Técnica & Personalizada",
     subtitle: "Petições detalhadas com rigor dogmático",
     description: "Redação cuidadosa de instrumentos, minutas ou peças processuais com fundamentação jurisprudencial atualizada e cálculos precisos.",
   },

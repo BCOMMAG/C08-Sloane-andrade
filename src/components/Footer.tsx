@@ -31,7 +31,7 @@ export function Footer() {
             </div>
             
             <p className="font-body text-xs sm:text-sm text-gray-300 max-w-sm leading-relaxed">
-              Atuação artesanal e estratégica nas áreas do Direito do Trabalho, Previdenciário/Acidentário, Família e Cível. Atendimento ético, próximo e resolutivo em Guaíra/SP e em âmbito nacional.
+              Atuação personalizada e estratégica nas áreas do Direito do Trabalho, Previdenciário/Acidentário, Família e Cível. Atendimento ético, próximo e resolutivo em Guaíra/SP e em âmbito nacional.
             </p>
 
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-[#D4A396]/30 bg-white/5 text-xs font-heading text-[#D4A396]">
