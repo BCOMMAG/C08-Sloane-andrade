@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState } from "react";
 import { FAQ_DATA, OFFICE_INFO } from "@/lib/data";
@@ -110,9 +110,9 @@ export function FaqSection() {
             href={OFFICE_INFO.whatsappUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="btn-pill bg-[#A6766A] hover:bg-[#8d5e53] text-white text-xs px-4 py-2 gap-1.5 whitespace-nowrap"
+            className="btn-pill bg-white dark:bg-[#151A1F] text-[#1A1D20] dark:text-white border-2 border-[#A6766A] hover:bg-[#A6766A] hover:text-white dark:hover:bg-[#A6766A] dark:hover:text-white text-xs px-5 py-2.5 gap-2 whitespace-nowrap hover-lift transition-all"
           >
-            <MessageSquare className="w-3.5 h-3.5 fill-white" />
+            <MessageSquare className="w-3.5 h-3.5 text-[#A6766A]" />
             <span>Tirar Dúvida</span>
           </a>
         </div>

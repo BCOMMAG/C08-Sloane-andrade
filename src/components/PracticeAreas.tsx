@@ -98,9 +98,9 @@ export function PracticeAreas() {
             href={OFFICE_INFO.whatsappUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="btn-pill bg-[#A6766A] hover:bg-[#8d5e53] text-white gap-2 shadow-xs text-xs sm:text-sm whitespace-nowrap flex-shrink-0"
+            className="btn-pill bg-white dark:bg-[#151A1F] text-[#1A1D20] dark:text-white border-2 border-[#A6766A] hover:bg-[#A6766A] hover:text-white dark:hover:bg-[#A6766A] dark:hover:text-white gap-2 shadow-xs text-xs sm:text-sm whitespace-nowrap flex-shrink-0 hover-lift transition-all"
           >
-            <MessageSquare className="w-4 h-4 fill-white" />
+            <MessageSquare className="w-4 h-4 text-[#A6766A] group-hover:text-white" />
             <span>Falar com a Advogada</span>
           </a>
         </div>
