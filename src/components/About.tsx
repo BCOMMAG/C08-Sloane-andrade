@@ -1,8 +1,9 @@
-﻿"use client";
+"use client";
 
 import Image from "next/image";
 import { LAWYER_PROFILE, OFFICE_INFO } from "@/lib/data";
 import { GraduationCap, Award, Compass, Eye, ShieldCheck, CheckCircle2, MessageSquare } from "lucide-react";
+import { RevealOnScroll } from "@/components/RevealOnScroll";
 
 export function About() {
   return (
@@ -10,28 +11,31 @@ export function About() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Cabeçalho da Seção */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between pb-8 border-b border-[var(--border-subtle)]/30 gap-6 mb-12 sm:mb-16">
-          <div>
-            <div className="flex items-center gap-3 mb-2">
-              <span className="bullet-indicator text-[#A6766A]" />
-              <span className="font-heading uppercase text-xs tracking-widest text-[#A6766A] font-bold">
-                01 / Perfil Profissional & Trajetória
-              </span>
+        <RevealOnScroll direction="up">
+          <div className="flex flex-col md:flex-row md:items-end justify-between pb-8 border-b border-[var(--border-subtle)]/30 gap-6 mb-12 sm:mb-16">
+            <div>
+              <div className="flex items-center gap-3 mb-2">
+                <span className="bullet-indicator text-[#A6766A]" />
+                <span className="font-heading uppercase text-xs tracking-widest text-[#A6766A] font-bold">
+                  01 / Perfil Profissional & Trajetória
+                </span>
+              </div>
+              <h2 className="font-heading text-3xl sm:text-4xl lg:text-5xl text-[var(--text-main)] font-semibold">
+                Sobre a Dra. Sloane Andrade
+              </h2>
             </div>
-            <h2 className="font-heading text-3xl sm:text-4xl lg:text-5xl text-[var(--text-main)] font-semibold">
-              Sobre a Dra. Sloane Andrade
-            </h2>
+            <p className="font-body text-sm sm:text-base text-[var(--text-muted)] max-w-xl leading-relaxed">
+              Mais de uma década aliando dedicação dogmática, empatia acolhedora e compromisso irrestrito com a segurança patrimonial e familiar de cada cliente.
+            </p>
           </div>
-          <p className="font-body text-sm sm:text-base text-[var(--text-muted)] max-w-xl leading-relaxed">
-            Mais de uma década aliando dedicação dogmática, empatia acolhedora e compromisso irrestrito com a segurança patrimonial e familiar de cada cliente.
-          </p>
-        </div>
+        </RevealOnScroll>
 
         {/* Bloco 1: Perfil, Citação e Foto */}
         <div className="grid lg:grid-cols-12 gap-10 items-center mb-16">
           
           <div className="lg:col-span-5 flex justify-center">
-            <div className="relative w-full max-w-md aspect-[4/5] rounded-2xl overflow-hidden border border-[var(--border-subtle)]/40 shadow-xl">
+            <RevealOnScroll direction="none">
+              <div className="relative w-full max-w-md aspect-[4/5] rounded-2xl overflow-hidden border border-[var(--border-subtle)]/40 shadow-xl hover-lift">
               <Image
                 src={LAWYER_PROFILE.photo}
                 alt={LAWYER_PROFILE.name}
@@ -52,6 +56,7 @@ export function About() {
                 </p>
               </div>
             </div>
+            </RevealOnScroll>
           </div>
 
           <div className="lg:col-span-7 flex flex-col justify-center space-y-6">

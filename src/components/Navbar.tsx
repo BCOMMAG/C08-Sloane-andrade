@@ -1,17 +1,43 @@
 ﻿"use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useTheme } from "@/context/ThemeContext";
 import { ThemeToggle } from "./ThemeToggle";
 import { OFFICE_INFO } from "@/lib/data";
-import { Menu, X, MessageSquare, ShieldCheck } from "lucide-react";
+import { Menu, X, ChevronDown, ShieldCheck, ArrowUpRight } from "lucide-react";
+import { WhatsAppIcon } from "@/components/SocialIcons";
 
 export function Navbar() {
   const { theme } = useTheme();
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  // Estados dos submenus dropdown no desktop
+  const [officeDropdownOpen, setOfficeDropdownOpen] = useState(false);
+  const [areasDropdownOpen, setAreasDropdownOpen] = useState(false);
+
+  // Estados dos submenus no mobile (Accordion)
+  const [mobileOfficeOpen, setMobileOfficeOpen] = useState(false);
+  const [mobileAreasOpen, setMobileAreasOpen] = useState(false);
+
+  const officeRef = useRef<HTMLDivElement>(null);
+  const areasRef = useRef<HTMLDivElement>(null);
+
+  // Fecha dropdowns ao clicar fora no desktop
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (officeRef.current && !officeRef.current.contains(event.target as Node)) {
+        setOfficeDropdownOpen(false);
+      }
+      if (areasRef.current && !areasRef.current.contains(event.target as Node)) {
+        setAreasDropdownOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -44,7 +70,11 @@ export function Navbar() {
       ? "/logo_semfundo_escritabranca_paramodoescuro.png"
       : "/logo_semfundo_escritapreta_paramodoclaro.png";
 
-  const closeMobileMenu = () => setMobileMenuOpen(false);
+  const closeMobileMenu = () => {
+    setMobileMenuOpen(false);
+    setMobileOfficeOpen(false);
+    setMobileAreasOpen(false);
+  };
 
   return (
     <>
@@ -68,7 +98,7 @@ export function Navbar() {
       <header
         className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
           isScrolled
-            ? "bg-[var(--bg-primary)]/90 backdrop-blur-md shadow-xs border-b border-[var(--border-subtle)]/25 py-2 sm:py-2.5"
+            ? "bg-[var(--bg-primary)]/95 backdrop-blur-md shadow-sm border-b border-[var(--border-subtle)]/25 py-2.5 sm:py-3"
             : "bg-transparent py-3 sm:py-4"
         }`}
       >
@@ -79,46 +109,182 @@ export function Navbar() {
             <div className="lg:hidden w-36 sm:w-44 flex-shrink-0 pointer-events-none" />
 
             {/* Logo Desktop */}
-            <div className="hidden lg:flex items-center justify-start relative flex-shrink-0 w-72 xl:w-84 h-12">
+            <div className="hidden lg:flex items-center justify-start relative flex-shrink-0 w-64 xl:w-72 h-12">
               <Link href="#inicio" className="flex items-center group focus:outline-none">
-                <div className="relative h-12 w-64 xl:w-72 transition-transform duration-300 group-hover:scale-105">
+                <div className="relative h-12 w-60 xl:w-68 transition-transform duration-300 group-hover:scale-105">
                   <Image
                     src={currentLogo}
                     alt="Sloane Andrade Advocacia"
                     fill
                     priority
                     className="object-contain object-left drop-shadow-md"
-                    sizes="280px"
+                    sizes="260px"
                   />
                 </div>
               </Link>
             </div>
 
-            {/* Links Centrais (Desktop) */}
+            {/* Menu Desktop Enxuto com 4 Itens Principais + Submenus */}
             <nav
-              className={`hidden lg:flex items-center gap-6 xl:gap-8 text-[0.875rem] font-heading font-medium tracking-wide transition-colors duration-300 ${
+              className={`hidden lg:flex items-center gap-7 xl:gap-9 text-[0.875rem] font-heading uppercase tracking-wider transition-colors duration-300 ${
                 !isScrolled ? "text-white/95" : "text-[var(--text-main)]"
               }`}
             >
-              <Link href="#inicio" className="transition-colors editorial-link hover:text-[var(--accent)]">
+              <Link href="#inicio" className="transition-colors editorial-link hover:text-[var(--accent)] font-semibold">
                 Início
               </Link>
-              <Link href="#sobre" className="transition-colors editorial-link hover:text-[var(--accent)]">
-                A Advogada
-              </Link>
-              <Link href="#atuacao" className="transition-colors editorial-link hover:text-[var(--accent)]">
-                Áreas de Atuação
-              </Link>
-              <Link href="#educativo" className="transition-colors editorial-link hover:text-[var(--accent)]">
-                Conteúdo Jurídico
-              </Link>
-              <Link href="#avaliacoes" className="transition-colors editorial-link hover:text-[var(--accent)]">
-                Avaliações
-              </Link>
-              <Link href="#faq" className="transition-colors editorial-link hover:text-[var(--accent)]">
-                Dúvidas
-              </Link>
-              <Link href="#contato" className="transition-colors editorial-link hover:text-[var(--accent)]">
+
+              {/* Submenu 1: O Escritório */}
+              <div
+                ref={officeRef}
+                className="relative"
+                onMouseEnter={() => setOfficeDropdownOpen(true)}
+                onMouseLeave={() => setOfficeDropdownOpen(false)}
+              >
+                <button
+                  type="button"
+                  onClick={() => setOfficeDropdownOpen(!officeDropdownOpen)}
+                  className="inline-flex items-center gap-1.5 transition-colors py-2 focus:outline-none cursor-pointer hover:text-[var(--accent)] font-semibold"
+                  aria-expanded={officeDropdownOpen}
+                >
+                  <span className="editorial-link">O Escritório</span>
+                  <ChevronDown
+                    className={`w-3.5 h-3.5 transition-transform duration-200 ${
+                      officeDropdownOpen ? "rotate-180 text-[var(--accent)]" : "opacity-70"
+                    }`}
+                  />
+                </button>
+
+                {/* Dropdown Card */}
+                {officeDropdownOpen && (
+                  <div className="absolute top-full left-0 w-64 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-subtle)]/40 shadow-2xl p-2.5 space-y-1 z-50 text-[var(--text-main)] normal-case animate-fade-in-down">
+                    <Link
+                      href="#sobre"
+                      onClick={() => setOfficeDropdownOpen(false)}
+                      className="p-3 rounded-xl hover:bg-[var(--bg-secondary)]/80 flex items-center justify-between group transition-colors"
+                    >
+                      <div>
+                        <span className="font-heading font-bold text-sm block group-hover:text-[#A6766A]">
+                          A Advogada
+                        </span>
+                        <span className="text-[0.6875rem] text-[var(--text-muted)] font-body">
+                          Trajetória, MBA e histórico profissional
+                        </span>
+                      </div>
+                      <ArrowUpRight className="w-3.5 h-3.5 text-[var(--text-muted)] group-hover:text-[#A6766A] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                    </Link>
+
+                    <Link
+                      href="#como-atuamos"
+                      onClick={() => setOfficeDropdownOpen(false)}
+                      className="p-3 rounded-xl hover:bg-[var(--bg-secondary)]/80 flex items-center justify-between group transition-colors"
+                    >
+                      <div>
+                        <span className="font-heading font-bold text-sm block group-hover:text-[#A6766A]">
+                          Como Funciona
+                        </span>
+                        <span className="text-[0.6875rem] text-[var(--text-muted)] font-body">
+                          Passo a passo do nosso atendimento
+                        </span>
+                      </div>
+                      <ArrowUpRight className="w-3.5 h-3.5 text-[var(--text-muted)] group-hover:text-[#A6766A] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                    </Link>
+
+                    <Link
+                      href="#avaliacoes"
+                      onClick={() => setOfficeDropdownOpen(false)}
+                      className="p-3 rounded-xl hover:bg-[var(--bg-secondary)]/80 flex items-center justify-between group transition-colors"
+                    >
+                      <div>
+                        <span className="font-heading font-bold text-sm block group-hover:text-[#A6766A]">
+                          Avaliações (Google)
+                        </span>
+                        <span className="text-[0.6875rem] text-[var(--text-muted)] font-body">
+                          Nota 5.0 estrelas (+70 opiniões)
+                        </span>
+                      </div>
+                      <ArrowUpRight className="w-3.5 h-3.5 text-[var(--text-muted)] group-hover:text-[#A6766A] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                    </Link>
+                  </div>
+                )}
+              </div>
+
+              {/* Submenu 2: Atuação & Conteúdo */}
+              <div
+                ref={areasRef}
+                className="relative"
+                onMouseEnter={() => setAreasDropdownOpen(true)}
+                onMouseLeave={() => setAreasDropdownOpen(false)}
+              >
+                <button
+                  type="button"
+                  onClick={() => setAreasDropdownOpen(!areasDropdownOpen)}
+                  className="inline-flex items-center gap-1.5 transition-colors py-2 focus:outline-none cursor-pointer hover:text-[var(--accent)] font-semibold"
+                  aria-expanded={areasDropdownOpen}
+                >
+                  <span className="editorial-link">Atuação & Conteúdo</span>
+                  <ChevronDown
+                    className={`w-3.5 h-3.5 transition-transform duration-200 ${
+                      areasDropdownOpen ? "rotate-180 text-[var(--accent)]" : "opacity-70"
+                    }`}
+                  />
+                </button>
+
+                {/* Dropdown Card */}
+                {areasDropdownOpen && (
+                  <div className="absolute top-full left-0 w-68 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-subtle)]/40 shadow-2xl p-2.5 space-y-1 z-50 text-[var(--text-main)] normal-case animate-fade-in-down">
+                    <Link
+                      href="#atuacao"
+                      onClick={() => setAreasDropdownOpen(false)}
+                      className="p-3 rounded-xl hover:bg-[var(--bg-secondary)]/80 flex items-center justify-between group transition-colors"
+                    >
+                      <div>
+                        <span className="font-heading font-bold text-sm block group-hover:text-[#A6766A]">
+                          Áreas de Atuação
+                        </span>
+                        <span className="text-[0.6875rem] text-[var(--text-muted)] font-body">
+                          Trabalhista, Previdenciário, Família e Cível
+                        </span>
+                      </div>
+                      <ArrowUpRight className="w-3.5 h-3.5 text-[var(--text-muted)] group-hover:text-[#A6766A] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                    </Link>
+
+                    <Link
+                      href="#educativo"
+                      onClick={() => setAreasDropdownOpen(false)}
+                      className="p-3 rounded-xl hover:bg-[var(--bg-secondary)]/80 flex items-center justify-between group transition-colors"
+                    >
+                      <div>
+                        <span className="font-heading font-bold text-sm block group-hover:text-[#A6766A]">
+                          Conteúdo Educativo
+                        </span>
+                        <span className="text-[0.6875rem] text-[var(--text-muted)] font-body">
+                          Artigos e orientações éticas CFOAB
+                        </span>
+                      </div>
+                      <ArrowUpRight className="w-3.5 h-3.5 text-[var(--text-muted)] group-hover:text-[#A6766A] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                    </Link>
+
+                    <Link
+                      href="#faq"
+                      onClick={() => setAreasDropdownOpen(false)}
+                      className="p-3 rounded-xl hover:bg-[var(--bg-secondary)]/80 flex items-center justify-between group transition-colors"
+                    >
+                      <div>
+                        <span className="font-heading font-bold text-sm block group-hover:text-[#A6766A]">
+                          Dúvidas Frequentes (FAQ)
+                        </span>
+                        <span className="text-[0.6875rem] text-[var(--text-muted)] font-body">
+                          Respostas diretas para as dúvidas comuns
+                        </span>
+                      </div>
+                      <ArrowUpRight className="w-3.5 h-3.5 text-[var(--text-muted)] group-hover:text-[#A6766A] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                    </Link>
+                  </div>
+                )}
+              </div>
+
+              <Link href="#contato" className="transition-colors editorial-link hover:text-[var(--accent)] font-semibold">
                 Contato
               </Link>
             </nav>
@@ -131,9 +297,9 @@ export function Navbar() {
                 href={OFFICE_INFO.whatsappUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="btn-pill bg-[#A6766A] hover:bg-[#8d5e53] text-white transition-all duration-300 gap-1.5 sm:gap-2 shadow-xs text-xs sm:text-sm px-3 sm:px-5 py-2 sm:py-2.5 flex-shrink-0 cursor-pointer"
+                className="btn-pill bg-[#25D366] hover:bg-[#20ba59] hover:scale-105 text-white transition-all duration-300 gap-1.5 sm:gap-2 shadow-sm text-xs sm:text-sm px-3.5 sm:px-5 py-2 sm:py-2.5 flex-shrink-0 cursor-pointer"
               >
-                <MessageSquare className="w-4 h-4 fill-white" />
+                <WhatsAppIcon className="w-4 h-4 text-white" />
                 <span className="hidden sm:inline">WhatsApp</span>
                 <span className="sm:hidden text-xs">Whats</span>
               </a>
@@ -155,18 +321,18 @@ export function Navbar() {
         </div>
       </header>
 
-      {/* 3. MENU MOBILE DRAWER (Off-canvas) */}
+      {/* 3. MENU MOBILE DRAWER (Off-canvas enxuto com Accordions) */}
       <div
         className={`lg:hidden fixed inset-0 z-50 transition-all duration-300 ${
           mobileMenuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
         }`}
       >
         <div
-          className="fixed inset-0 bg-black/70 backdrop-blur-sm"
+          className="fixed inset-0 bg-black/75 backdrop-blur-sm"
           onClick={closeMobileMenu}
         />
         <div
-          className={`fixed top-0 right-0 bottom-0 w-[84vw] max-w-sm bg-[var(--bg-primary)] border-l border-[var(--border-subtle)]/30 p-6 flex flex-col justify-between shadow-2xl transition-transform duration-300 ${
+          className={`fixed top-0 right-0 bottom-0 w-[84vw] max-w-sm bg-[var(--bg-primary)] border-l border-[var(--border-subtle)]/30 p-6 flex flex-col justify-between shadow-2xl transition-transform duration-300 overflow-y-auto ${
             mobileMenuOpen ? "translate-x-0" : "translate-x-full"
           }`}
         >
@@ -191,50 +357,85 @@ export function Navbar() {
               </button>
             </div>
 
-            <div className="my-4 flex items-center gap-2 px-3 py-1.5 rounded-full border border-[var(--border-subtle)]/30 bg-[var(--bg-secondary)]/70 text-xs font-heading text-[var(--accent-dark)]">
+            <div className="my-4 flex items-center gap-2 px-3 py-1.5 rounded-full border border-[#D4A396]/40 bg-[var(--bg-secondary)]/70 text-xs font-heading text-[#A6766A]">
               <ShieldCheck className="w-3.5 h-3.5 text-[#A6766A]" />
               <span>{OFFICE_INFO.oab} • OAB/SP</span>
             </div>
 
-            <nav className="flex flex-col space-y-3 font-heading text-base font-medium text-[var(--text-main)] pt-2">
-              <Link href="#inicio" onClick={closeMobileMenu} className="py-1 hover:text-[var(--accent-dark)]">
+            {/* Navegação Mobile Enxuta com Submenus */}
+            <nav className="flex flex-col space-y-2 font-heading text-base font-medium text-[var(--text-main)] pt-2">
+              <Link href="#inicio" onClick={closeMobileMenu} className="py-2 hover:text-[#A6766A] border-b border-[var(--border-subtle)]/15">
                 Início
               </Link>
-              <Link href="#sobre" onClick={closeMobileMenu} className="py-1 hover:text-[var(--accent-dark)]">
-                A Advogada
-              </Link>
-              <Link href="#atuacao" onClick={closeMobileMenu} className="py-1 hover:text-[var(--accent-dark)]">
-                Áreas de Atuação
-              </Link>
-              <Link href="#educativo" onClick={closeMobileMenu} className="py-1 hover:text-[var(--accent-dark)]">
-                Conteúdo Jurídico
-              </Link>
-              <Link href="#avaliacoes" onClick={closeMobileMenu} className="py-1 hover:text-[var(--accent-dark)]">
-                Avaliações (+70)
-              </Link>
-              <Link href="#como-atuamos" onClick={closeMobileMenu} className="py-1 hover:text-[var(--accent-dark)]">
-                Como Funciona
-              </Link>
-              <Link href="#faq" onClick={closeMobileMenu} className="py-1 hover:text-[var(--accent-dark)]">
-                Perguntas Frequentes
-              </Link>
-              <Link href="#contato" onClick={closeMobileMenu} className="py-1 hover:text-[var(--accent-dark)]">
+
+              {/* Submenu Mobile: O Escritório */}
+              <div className="border-b border-[var(--border-subtle)]/15 py-1">
+                <button
+                  type="button"
+                  onClick={() => setMobileOfficeOpen(!mobileOfficeOpen)}
+                  className="w-full flex items-center justify-between py-2 text-left hover:text-[#A6766A] cursor-pointer"
+                >
+                  <span>O Escritório</span>
+                  <ChevronDown className={`w-4 h-4 transition-transform ${mobileOfficeOpen ? "rotate-180 text-[#A6766A]" : ""}`} />
+                </button>
+                {mobileOfficeOpen && (
+                  <div className="pl-4 pb-2 space-y-2 text-sm text-[var(--text-muted)] font-body animate-fade-in-down">
+                    <Link href="#sobre" onClick={closeMobileMenu} className="block py-1 hover:text-[#A6766A]">
+                      • A Advogada & Formação
+                    </Link>
+                    <Link href="#como-atuamos" onClick={closeMobileMenu} className="block py-1 hover:text-[#A6766A]">
+                      • Como Funciona o Atendimento
+                    </Link>
+                    <Link href="#avaliacoes" onClick={closeMobileMenu} className="block py-1 hover:text-[#A6766A]">
+                      • Avaliações do Google (+70)
+                    </Link>
+                  </div>
+                )}
+              </div>
+
+              {/* Submenu Mobile: Atuação & Conteúdo */}
+              <div className="border-b border-[var(--border-subtle)]/15 py-1">
+                <button
+                  type="button"
+                  onClick={() => setMobileAreasOpen(!mobileAreasOpen)}
+                  className="w-full flex items-center justify-between py-2 text-left hover:text-[#A6766A] cursor-pointer"
+                >
+                  <span>Atuação & Conteúdo</span>
+                  <ChevronDown className={`w-4 h-4 transition-transform ${mobileAreasOpen ? "rotate-180 text-[#A6766A]" : ""}`} />
+                </button>
+                {mobileAreasOpen && (
+                  <div className="pl-4 pb-2 space-y-2 text-sm text-[var(--text-muted)] font-body animate-fade-in-down">
+                    <Link href="#atuacao" onClick={closeMobileMenu} className="block py-1 hover:text-[#A6766A]">
+                      • Áreas de Atuação
+                    </Link>
+                    <Link href="#educativo" onClick={closeMobileMenu} className="block py-1 hover:text-[#A6766A]">
+                      • Conteúdo Jurídico (CFOAB)
+                    </Link>
+                    <Link href="#faq" onClick={closeMobileMenu} className="block py-1 hover:text-[#A6766A]">
+                      • Perguntas Frequentes (FAQ)
+                    </Link>
+                  </div>
+                )}
+              </div>
+
+              <Link href="#contato" onClick={closeMobileMenu} className="py-2 hover:text-[#A6766A] border-b border-[var(--border-subtle)]/15">
                 Contato & Localização
               </Link>
-              <Link href="/links" onClick={closeMobileMenu} className="py-1 text-[var(--accent-dark)] font-semibold">
+              
+              <Link href="/links" onClick={closeMobileMenu} className="py-2 text-[#A6766A] font-semibold">
                 Link-in-Bio (/links)
               </Link>
             </nav>
           </div>
 
-          <div className="pt-4 border-t border-[var(--border-subtle)]/25 space-y-3">
+          <div className="pt-4 border-t border-[var(--border-subtle)]/25 space-y-3 mt-6">
             <a
               href={OFFICE_INFO.whatsappUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full btn-pill bg-[#A6766A] text-white py-3 text-sm gap-2"
+              className="w-full btn-pill bg-[#25D366] hover:bg-[#20ba59] text-white py-3 text-sm gap-2 shadow-md cursor-pointer"
             >
-              <MessageSquare className="w-4 h-4 fill-white" />
+              <WhatsAppIcon className="w-4 h-4 text-white" />
               <span>Falar no WhatsApp</span>
             </a>
             <p className="text-center text-[0.6875rem] text-[var(--text-muted)]">
