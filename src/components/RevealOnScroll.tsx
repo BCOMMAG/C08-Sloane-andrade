@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useEffect, useRef, ReactNode } from "react";
 
@@ -32,8 +32,8 @@ export function RevealOnScroll({
         });
       },
       {
-        threshold: 0.1,
-        rootMargin: "0px 0px -40px 0px",
+        threshold: 0.05,
+        rootMargin: "0px 0px -20px 0px",
       }
     );
 
@@ -53,7 +53,7 @@ export function RevealOnScroll({
   return (
     <div
       ref={ref}
-      className={className}
+      className={`w-full ${className}`.trim()}
       style={{
         opacity: 0,
         transform: getInitialTransform(),

@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState } from "react";
 import Image from "next/image";
@@ -37,33 +37,31 @@ export function About() {
         <div className="grid lg:grid-cols-12 gap-10 lg:gap-12 items-start mb-16">
           
           {/* Coluna da Foto Oficial da Dra. Sloane (5 colunas) */}
-          <div className="lg:col-span-5 flex justify-center sticky top-28">
-            <RevealOnScroll direction="none">
-              <div className="relative w-full max-w-sm sm:max-w-md h-[460px] sm:h-[530px] rounded-3xl overflow-hidden border-2 border-[#D4A396]/60 shadow-2xl hover-lift group bg-black/90">
-                <Image
-                  src={LAWYER_PROFILE.photo}
-                  alt={LAWYER_PROFILE.name}
-                  fill
-                  priority
-                  className="object-cover object-top transition-transform duration-700 group-hover:scale-105"
-                  sizes="(max-width: 768px) 100vw, 450px"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
-                
-                {/* Badge Inferior com Nome e OAB */}
-                <div className="absolute bottom-6 left-6 right-6 text-white">
-                  <span className="text-xs uppercase tracking-widest text-[#D4A396] font-heading font-semibold block mb-1">
-                    Advogada Titular • OAB/SP 463.336
-                  </span>
-                  <p className="font-heading text-xl sm:text-2xl font-bold leading-tight text-white">
-                    {LAWYER_PROFILE.name}
-                  </p>
-                  <p className="text-xs text-gray-300 font-body mt-1">
-                    Pós-graduada e MBA em Direito do Trabalho, Previdenciário e Acidentário
-                  </p>
-                </div>
+          <div className="lg:col-span-5 w-full flex justify-center lg:justify-start lg:sticky lg:top-28 self-start">
+            <div className="relative w-full max-w-[360px] sm:max-w-[400px] aspect-[4/5] sm:aspect-[3/4] rounded-3xl overflow-hidden border-2 border-[#D4A396]/80 shadow-2xl hover-lift group bg-[#151A1F]">
+              <Image
+                src={LAWYER_PROFILE.photo}
+                alt={LAWYER_PROFILE.name}
+                fill
+                priority
+                className="object-cover object-top transition-transform duration-700 group-hover:scale-105"
+                sizes="(max-width: 768px) 90vw, 420px"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/25 to-transparent pointer-events-none" />
+              
+              {/* Badge Inferior com Nome e OAB */}
+              <div className="absolute bottom-5 left-5 right-5 text-white z-10 pointer-events-none">
+                <span className="text-[0.6875rem] uppercase tracking-widest text-[#D4A396] font-heading font-semibold block mb-1">
+                  Advogada Titular • {OFFICE_INFO.oab}
+                </span>
+                <p className="font-heading text-xl sm:text-2xl font-bold leading-tight text-white drop-shadow-sm">
+                  {LAWYER_PROFILE.name}
+                </p>
+                <p className="text-xs text-gray-200 font-body mt-1 leading-relaxed">
+                  Pós-graduada e MBA em Direito do Trabalho, Previdenciário e Acidentário
+                </p>
               </div>
-            </RevealOnScroll>
+            </div>
           </div>
 
           {/* Coluna de Informações (7 colunas) */}
