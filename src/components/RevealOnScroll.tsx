@@ -6,7 +6,7 @@ interface RevealOnScrollProps {
   children: ReactNode;
   className?: string;
   delay?: number;
-  direction?: "up" | "down" | "none";
+  direction?: "up" | "down" | "zoom" | "slide-left" | "slide-right" | "none";
 }
 
 export function RevealOnScroll({
@@ -21,12 +21,21 @@ export function RevealOnScroll({
     const el = ref.current;
     if (!el) return;
 
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (prefersReducedMotion) {
+      el.style.opacity = "1";
+      el.style.transform = "none";
+      el.style.filter = "none";
+      return;
+    }
+
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             el.style.opacity = "1";
-            el.style.transform = "translate(0, 0) scale(1)";
+            el.style.transform = "translate3d(0, 0, 0) scale(1)";
+            el.style.filter = "blur(0)";
             observer.unobserve(el);
           }
         });
@@ -45,9 +54,26 @@ export function RevealOnScroll({
   }, []);
 
   const getInitialTransform = () => {
-    if (direction === "up") return "translateY(32px)";
-    if (direction === "down") return "translateY(-32px)";
-    return "scale(0.96)";
+    switch (direction) {
+      case "up":
+        return "translate3d(0, 32px, 0)";
+      case "down":
+        return "translate3d(0, -32px, 0)";
+      case "zoom":
+        return "scale(0.92)";
+      case "slide-left":
+        return "translate3d(36px, 0, 0)";
+      case "slide-right":
+        return "translate3d(-36px, 0, 0)";
+      case "none":
+      default:
+        return "none";
+    }
+  };
+
+  const getInitialFilter = () => {
+    if (direction === "zoom") return "blur(4px)";
+    return "none";
   };
 
   return (
@@ -57,8 +83,9 @@ export function RevealOnScroll({
       style={{
         opacity: 0,
         transform: getInitialTransform(),
-        transition: `opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1) ${delay}ms, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1) ${delay}ms`,
-        willChange: "opacity, transform",
+        filter: getInitialFilter(),
+        transition: `opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1) ${delay}ms, transform 0.85s cubic-bezier(0.16, 1, 0.3, 1) ${delay}ms, filter 0.85s cubic-bezier(0.16, 1, 0.3, 1) ${delay}ms`,
+        willChange: "opacity, transform, filter",
       }}
     >
       {children}

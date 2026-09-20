@@ -26,22 +26,23 @@ export function Hero() {
           />
         </div>
 
-        {/* Desktop: header_desktop.jpeg */}
+        {/* Desktop: header_desktop.jpeg com alta fidelidade */}
         <div className="relative w-full h-full hidden md:block">
           <Image
             src="/header_desktop.jpeg"
             alt="Sloane Andrade Advocacia"
             fill
             priority
+            quality={95}
             className="object-cover object-center"
             sizes="100vw"
           />
         </div>
 
-        {/* Gradientes e Overlays refinados para manter a legibilidade dos textos e o tom Rose Gold */}
-        <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/75 to-black/55 md:from-black/90 md:via-black/70 md:to-black/45" />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-transparent to-black/65" />
-        <div className="absolute -top-32 -right-32 w-96 h-96 bg-[#D4A396]/15 rounded-full blur-3xl" />
+        {/* Gradientes e Overlays: no mobile, mantém contraste escuro total; no desktop, mantém a imagem 100% nítida, iluminada e sem blur */}
+        <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/75 to-black/55 md:from-black/80 md:via-black/30 md:via-50% md:to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-transparent to-black/65 md:from-black/30 md:via-transparent md:to-transparent" />
+        <div className="absolute -top-32 -right-32 w-96 h-96 bg-[#D4A396]/15 rounded-full blur-3xl md:hidden" />
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full flex-1 flex flex-col justify-between">
@@ -56,7 +57,7 @@ export function Hero() {
           </div>
 
           {/* Headline Principal */}
-          <h1 className="font-heading text-3xl sm:text-4xl md:text-5xl lg:text-[3.5rem] leading-[1.12] tracking-tight text-white font-semibold drop-shadow-md">
+          <h1 className="font-heading text-3xl sm:text-4xl md:text-5xl lg:text-[3.5rem] leading-[1.12] tracking-tight text-white font-semibold drop-shadow-[0_2px_14px_rgba(0,0,0,0.9)]">
             Segurança jurídica e atuação{" "}
             <span className="text-[#D4A396] relative">
               estratégica

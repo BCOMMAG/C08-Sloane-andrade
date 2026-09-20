@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { FAQ_DATA, OFFICE_INFO } from "@/lib/data";
 import { ChevronDown, HelpCircle, MessageSquare } from "lucide-react";
+import { RevealOnScroll } from "@/components/RevealOnScroll";
 
 export function FaqSection() {
   const [activeTab, setActiveTab] = useState<string>("trabalhista");
@@ -26,22 +27,24 @@ export function FaqSection() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Cabeçalho */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between pb-8 border-b border-[var(--border-subtle)]/30 gap-6 mb-12 sm:mb-16">
-          <div>
-            <div className="flex items-center gap-3 mb-2">
-              <span className="bullet-indicator text-[#A6766A]" />
-              <span className="font-heading uppercase text-xs tracking-widest text-[#A6766A] font-bold">
-                06 / Dúvidas Frequentes
-              </span>
+        <RevealOnScroll direction="up">
+          <div className="flex flex-col md:flex-row md:items-end justify-between pb-8 border-b border-[var(--border-subtle)]/30 gap-6 mb-12 sm:mb-16">
+            <div>
+              <div className="flex items-center gap-3 mb-2">
+                <span className="bullet-indicator text-[#A6766A]" />
+                <span className="font-heading uppercase text-xs tracking-widest text-[#A6766A] font-bold">
+                  06 / Dúvidas Frequentes
+                </span>
+              </div>
+              <h2 className="font-heading text-3xl sm:text-4xl lg:text-5xl text-[var(--text-main)] font-semibold">
+                Perguntas e Respostas
+              </h2>
             </div>
-            <h2 className="font-heading text-3xl sm:text-4xl lg:text-5xl text-[var(--text-main)] font-semibold">
-              Perguntas e Respostas
-            </h2>
+            <p className="font-body text-sm sm:text-base text-[var(--text-muted)] max-w-xl leading-relaxed">
+              Respostas diretas e esclarecedoras para as principais questões que recebemos diariamente no escritório.
+            </p>
           </div>
-          <p className="font-body text-sm sm:text-base text-[var(--text-muted)] max-w-xl leading-relaxed">
-            Respostas diretas e esclarecedoras para as principais questões que recebemos diariamente no escritório.
-          </p>
-        </div>
+        </RevealOnScroll>
 
         {/* Abas de Categorias */}
         <div className="flex flex-wrap gap-2.5 mb-8 pb-4 border-b border-[var(--border-subtle)]/25">

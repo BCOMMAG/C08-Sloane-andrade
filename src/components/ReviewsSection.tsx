@@ -1,7 +1,8 @@
-﻿"use client";
+"use client";
 
 import { REVIEWS } from "@/lib/data";
 import { Star, MessageSquareQuote } from "lucide-react";
+import { RevealOnScroll } from "@/components/RevealOnScroll";
 
 export function ReviewsSection() {
   // Duplicamos os reviews para efeito de marquee contínuo e suave
@@ -12,36 +13,38 @@ export function ReviewsSection() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-12">
         
         {/* Cabeçalho */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between pb-8 border-b border-[var(--border-subtle)]/30 gap-6">
-          <div>
-            <div className="flex items-center gap-3 mb-2">
-              <span className="bullet-indicator text-[#A6766A]" />
-              <span className="font-heading uppercase text-xs tracking-widest text-[#A6766A] font-bold">
-                04 / Reconhecimento Público
-              </span>
-            </div>
-            <h2 className="font-heading text-3xl sm:text-4xl lg:text-5xl text-[var(--text-main)] font-semibold">
-              Avaliações no Google Reviews
-            </h2>
-          </div>
-          
-          <div className="flex items-center gap-4 p-4 rounded-xl bg-[var(--bg-card)] border border-[var(--border-subtle)]/30 shadow-2xs">
-            <div className="text-right">
-              <div className="flex items-center gap-1 text-amber-400">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="w-4 h-4 fill-amber-400" />
-                ))}
+        <RevealOnScroll direction="up">
+          <div className="flex flex-col md:flex-row md:items-end justify-between pb-8 border-b border-[var(--border-subtle)]/30 gap-6">
+            <div>
+              <div className="flex items-center gap-3 mb-2">
+                <span className="bullet-indicator text-[#A6766A]" />
+                <span className="font-heading uppercase text-xs tracking-widest text-[#A6766A] font-bold">
+                  04 / Reconhecimento Público
+                </span>
               </div>
-              <span className="font-heading text-xs uppercase tracking-wider text-[var(--text-muted)] block mt-0.5">
-                Avaliação 5.0 Estrelas
-              </span>
+              <h2 className="font-heading text-3xl sm:text-4xl lg:text-5xl text-[var(--text-main)] font-semibold">
+                Avaliações no Google Reviews
+              </h2>
             </div>
-            <div className="h-8 w-[1px] bg-[var(--border-subtle)]/30" />
-            <div className="font-heading text-xl font-bold text-[var(--text-main)]">
-              +70 <span className="text-xs text-[var(--text-muted)] font-normal">opiniões públicas</span>
+            
+            <div className="flex items-center gap-4 p-4 rounded-xl bg-[var(--bg-card)] border border-[var(--border-subtle)]/30 shadow-2xs">
+              <div className="text-right">
+                <div className="flex items-center gap-1 text-amber-400">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="w-4 h-4 fill-amber-400" />
+                  ))}
+                </div>
+                <span className="font-heading text-xs uppercase tracking-wider text-[var(--text-muted)] block mt-0.5">
+                  Avaliação 5.0 Estrelas
+                </span>
+              </div>
+              <div className="h-8 w-[1px] bg-[var(--border-subtle)]/30" />
+              <div className="font-heading text-xl font-bold text-[var(--text-main)]">
+                +70 <span className="text-xs text-[var(--text-muted)] font-normal">opiniões públicas</span>
+              </div>
             </div>
           </div>
-        </div>
+        </RevealOnScroll>
 
       </div>
 

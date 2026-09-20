@@ -1,7 +1,8 @@
-﻿"use client";
+"use client";
 
 import { OFFICE_INFO } from "@/lib/data";
 import { MapPin, Phone, Mail, Clock, MessageSquare, ArrowUpRight, ShieldCheck } from "lucide-react";
+import { RevealOnScroll } from "@/components/RevealOnScroll";
 
 export function ContactSection() {
   const mapEmbedUrl =
@@ -12,22 +13,24 @@ export function ContactSection() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Cabeçalho */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between pb-8 border-b border-[var(--border-subtle)]/30 gap-6 mb-12 sm:mb-16">
-          <div>
-            <div className="flex items-center gap-3 mb-2">
-              <span className="bullet-indicator text-[#A6766A]" />
-              <span className="font-heading uppercase text-xs tracking-widest text-[#A6766A] font-bold">
-                07 / Canais Oficiais de Atendimento
-              </span>
+        <RevealOnScroll direction="up">
+          <div className="flex flex-col md:flex-row md:items-end justify-between pb-8 border-b border-[var(--border-subtle)]/30 gap-6 mb-12 sm:mb-16">
+            <div>
+              <div className="flex items-center gap-3 mb-2">
+                <span className="bullet-indicator text-[#A6766A]" />
+                <span className="font-heading uppercase text-xs tracking-widest text-[#A6766A] font-bold">
+                  07 / Canais Oficiais de Atendimento
+                </span>
+              </div>
+              <h2 className="font-heading text-3xl sm:text-4xl lg:text-5xl text-[var(--text-main)] font-semibold">
+                Contato & Localização
+              </h2>
             </div>
-            <h2 className="font-heading text-3xl sm:text-4xl lg:text-5xl text-[var(--text-main)] font-semibold">
-              Contato & Localização
-            </h2>
+            <p className="font-body text-sm sm:text-base text-[var(--text-muted)] max-w-xl leading-relaxed">
+              Sede física em Guaíra/SP com estrutura completa para atendimento presencial e suporte online para clientes em todo o território nacional.
+            </p>
           </div>
-          <p className="font-body text-sm sm:text-base text-[var(--text-muted)] max-w-xl leading-relaxed">
-            Sede física em Guaíra/SP com estrutura completa para atendimento presencial e suporte online para clientes em todo o território nacional.
-          </p>
-        </div>
+        </RevealOnScroll>
 
         {/* Grid: Dados à Esquerda + Google Maps à Direita */}
         <div className="grid lg:grid-cols-12 gap-8 lg:gap-12 items-stretch">

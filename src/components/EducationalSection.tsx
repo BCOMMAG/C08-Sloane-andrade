@@ -1,8 +1,9 @@
-﻿"use client";
+"use client";
 
 import { useState } from "react";
 import { EDUCATIONAL_TOPICS } from "@/lib/data";
 import { BookOpen, Clock, ChevronRight, ShieldAlert } from "lucide-react";
+import { RevealOnScroll } from "@/components/RevealOnScroll";
 
 export function EducationalSection() {
   const [selectedId, setSelectedId] = useState(EDUCATIONAL_TOPICS[0].id);
@@ -13,28 +14,30 @@ export function EducationalSection() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Cabeçalho Ético OAB - Sem CTA comercial */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between pb-8 border-b border-[var(--border-subtle)]/30 gap-6 mb-12 sm:mb-16">
-          <div>
-            <div className="flex items-center gap-3 mb-2">
-              <span className="bullet-indicator text-[#A6766A]" />
-              <span className="font-heading uppercase text-xs tracking-widest text-[#A6766A] font-bold">
-                03 / Esclarecimento à Sociedade (CFOAB)
+        <RevealOnScroll direction="up">
+          <div className="flex flex-col md:flex-row md:items-end justify-between pb-8 border-b border-[var(--border-subtle)]/30 gap-6 mb-12 sm:mb-16">
+            <div>
+              <div className="flex items-center gap-3 mb-2">
+                <span className="bullet-indicator text-[#A6766A]" />
+                <span className="font-heading uppercase text-xs tracking-widest text-[#A6766A] font-bold">
+                  03 / Esclarecimento à Sociedade (CFOAB)
+                </span>
+              </div>
+              <h2 className="font-heading text-3xl sm:text-4xl lg:text-5xl text-[var(--text-main)] font-semibold">
+                Conteúdo Jurídico Educativo
+              </h2>
+            </div>
+            <div className="max-w-md">
+              <p className="font-body text-xs sm:text-sm text-[var(--text-muted)] leading-relaxed">
+                Esclarecimentos técnicos de utilidade pública sobre dúvidas e problemas jurídicos recorrentes no âmbito do Direito do Trabalho e Direito Civil.
+              </p>
+              <span className="inline-flex items-center gap-1.5 text-[0.6875rem] font-heading text-[#A6766A] mt-2">
+                <ShieldAlert className="w-3.5 h-3.5" />
+                <span>Espaço estritamente pedagógico • Provimento 205/2021 do CFOAB</span>
               </span>
             </div>
-            <h2 className="font-heading text-3xl sm:text-4xl lg:text-5xl text-[var(--text-main)] font-semibold">
-              Conteúdo Jurídico Educativo
-            </h2>
           </div>
-          <div className="max-w-md">
-            <p className="font-body text-xs sm:text-sm text-[var(--text-muted)] leading-relaxed">
-              Esclarecimentos técnicos de utilidade pública sobre dúvidas e problemas jurídicos recorrentes no âmbito do Direito do Trabalho e Direito Civil.
-            </p>
-            <span className="inline-flex items-center gap-1.5 text-[0.6875rem] font-heading text-[#A6766A] mt-2">
-              <ShieldAlert className="w-3.5 h-3.5" />
-              <span>Espaço estritamente pedagógico • Provimento 205/2021 do CFOAB</span>
-            </span>
-          </div>
-        </div>
+        </RevealOnScroll>
 
         {/* Layout Interativo: Lista de Artigos à Esquerda + Conteúdo Completo à Direita */}
         <div className="grid lg:grid-cols-12 gap-8 items-start">

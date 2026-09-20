@@ -1,4 +1,4 @@
-﻿import { Navbar } from "@/components/Navbar";
+import { Navbar } from "@/components/Navbar";
 import { Hero } from "@/components/Hero";
 import { InstitutionalPillars } from "@/components/InstitutionalPillars";
 import { About } from "@/components/About";
@@ -10,11 +10,15 @@ import { FaqSection } from "@/components/FaqSection";
 import { ContactSection } from "@/components/ContactSection";
 import { Footer } from "@/components/Footer";
 import { FloatingWhatsApp } from "@/components/FloatingWhatsApp";
+import { ScrollProgressBar } from "@/components/ScrollProgressBar";
+import { DesktopScrollIndicator } from "@/components/DesktopScrollIndicator";
 
 export default function Home() {
   return (
     <>
+      <ScrollProgressBar />
       <Navbar />
+      <DesktopScrollIndicator />
       <main className="flex-1">
         <Hero />
         <InstitutionalPillars />

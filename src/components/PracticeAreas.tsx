@@ -32,7 +32,7 @@ export function PracticeAreas() {
         {/* Grid de 6 Áreas de Atuação */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
           {PRACTICE_AREAS.map((area, idx) => (
-            <RevealOnScroll key={area.id} delay={idx * 80} direction="up">
+            <RevealOnScroll key={area.id} delay={idx * 75} direction="zoom">
               <div
                 className="h-full p-6 sm:p-8 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-subtle)]/35 shadow-xs hover:border-[#A6766A] hover-lift transition-all duration-300 flex flex-col justify-between group"
               >
