@@ -1,74 +1,135 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { LAWYER_PROFILE, OFFICE_INFO } from "@/lib/data";
 import { GraduationCap, Award, Compass, Eye, ShieldCheck, CheckCircle2, MessageSquare, ChevronDown, Sparkles } from "lucide-react";
-import { RevealOnScroll } from "@/components/RevealOnScroll";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 export function About() {
   const [isExpanded, setIsExpanded] = useState(false);
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const cardsRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (prefersReducedMotion) return;
+
+    gsap.registerPlugin(ScrollTrigger);
+
+    const ctx = gsap.context(() => {
+      if (sectionRef.current) {
+        // Elementos principais do Sobre: fade in da esquerda para a direita ao rolar a tela
+        const slideRightItems = sectionRef.current.querySelectorAll(".about-slide-right");
+        if (slideRightItems.length > 0) {
+          gsap.fromTo(
+            slideRightItems,
+            { x: -90, opacity: 0 },
+            {
+              x: 0,
+              opacity: 1,
+              duration: 0.9,
+              stagger: 0.22,
+              ease: "power2.out",
+              scrollTrigger: {
+                trigger: sectionRef.current,
+                start: "top 78%",
+                toggleActions: "play none none reverse",
+              },
+            }
+          );
+        }
+
+        // Cards inferiores (Missão, Visão e Valores): fade in sequencial da esquerda para a direita
+        if (cardsRef.current) {
+          const cards = cardsRef.current.querySelectorAll(".about-card-item");
+          if (cards.length > 0) {
+            gsap.fromTo(
+              cards,
+              { x: -75, opacity: 0 },
+              {
+                x: 0,
+                opacity: 1,
+                duration: 0.85,
+                stagger: 0.2,
+                ease: "power2.out",
+                scrollTrigger: {
+                  trigger: cardsRef.current,
+                  start: "top 82%",
+                  toggleActions: "play none none reverse",
+                },
+              }
+            );
+          }
+        }
+      }
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
 
   return (
-    <section id="sobre" className="py-16 sm:py-24 bg-[var(--bg-primary)] editorial-border-b w-full relative overflow-hidden">
+    <section
+      id="sobre"
+      ref={sectionRef}
+      className="py-16 sm:py-24 bg-[var(--bg-primary)] editorial-border-b w-full relative overflow-hidden"
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Cabeçalho da Seção com fade in da esquerda para a direita */}
-        <RevealOnScroll direction="slide-right">
-          <div className="flex flex-col md:flex-row md:items-end justify-between pb-8 border-b border-[var(--border-subtle)]/30 gap-6 mb-12 sm:mb-16">
-            <div>
-              <div className="flex items-center gap-3 mb-2">
-                <span className="bullet-indicator text-[#A6766A]" />
-                <span className="font-heading uppercase text-xs tracking-widest text-[#A6766A] font-bold">
-                  01 / Perfil Profissional & Trajetória
-                </span>
-              </div>
-              <h2 className="font-heading text-3xl sm:text-4xl lg:text-5xl text-[var(--text-main)] font-semibold">
-                Sobre a Dra. Sloane Andrade
-              </h2>
+        <div className="about-slide-right flex flex-col md:flex-row md:items-end justify-between pb-8 border-b border-[var(--border-subtle)]/30 gap-6 mb-12 sm:mb-16 will-change-transform">
+          <div>
+            <div className="flex items-center gap-3 mb-2">
+              <span className="bullet-indicator text-[#A6766A]" />
+              <span className="font-heading uppercase text-xs tracking-widest text-[#A6766A] font-bold">
+                01 / Perfil Profissional & Trajetória
+              </span>
             </div>
-            <p className="font-body text-sm sm:text-base text-[var(--text-muted)] max-w-xl leading-relaxed">
-              Mais de uma década aliando dedicação dogmática, empatia acolhedora e compromisso irrestrito com a segurança jurídica de cada cliente.
-            </p>
+            <h2 className="font-heading text-3xl sm:text-4xl lg:text-5xl text-[var(--text-main)] font-semibold">
+              Sobre a Dra. Sloane Andrade
+            </h2>
           </div>
-        </RevealOnScroll>
+          <p className="font-body text-sm sm:text-base text-[var(--text-muted)] max-w-xl leading-relaxed">
+            Mais de uma década aliando dedicação dogmática, empatia acolhedora e compromisso irrestrito com a segurança jurídica de cada cliente.
+          </p>
+        </div>
 
         {/* Bloco 1: Foto Oficial em Destaque + Resumo de Alto Impacto com Expansor */}
         <div className="grid lg:grid-cols-12 gap-10 lg:gap-12 items-start mb-16">
           
           {/* Coluna da Foto Oficial da Dra. Sloane (5 colunas) com fade in da esquerda para a direita */}
-          <div className="lg:col-span-5 w-full flex justify-center lg:justify-start lg:sticky lg:top-28 self-start">
-            <RevealOnScroll direction="slide-right" delay={100} className="w-full flex justify-center lg:justify-start">
-              <div className="relative w-full max-w-[360px] sm:max-w-[400px] aspect-[4/5] sm:aspect-[3/4] rounded-3xl overflow-hidden border-2 border-[#D4A396]/80 shadow-2xl hover-lift group bg-[#151A1F]">
-                <Image
-                  src={LAWYER_PROFILE.photo}
-                  alt={LAWYER_PROFILE.name}
-                  fill
-                  priority
-                  className="object-cover object-top transition-transform duration-700 group-hover:scale-105"
-                  sizes="(max-width: 768px) 90vw, 420px"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/25 to-transparent pointer-events-none" />
-                
-                {/* Badge Inferior com Nome e OAB */}
-                <div className="absolute bottom-5 left-5 right-5 text-white z-10 pointer-events-none">
-                  <span className="text-[0.6875rem] uppercase tracking-widest text-[#D4A396] font-heading font-semibold block mb-1">
-                    Advogada Titular • {OFFICE_INFO.oab}
-                  </span>
-                  <p className="font-heading text-xl sm:text-2xl font-bold leading-tight text-white drop-shadow-sm">
-                    {LAWYER_PROFILE.name}
-                  </p>
-                  <p className="text-xs text-gray-200 font-body mt-1 leading-relaxed">
-                    Pós-graduada e MBA em Direito do Trabalho, Previdenciário e Acidentário
-                  </p>
-                </div>
+          <div className="about-slide-right lg:col-span-5 w-full flex justify-center lg:justify-start lg:sticky lg:top-28 self-start will-change-transform">
+            <div className="relative w-full max-w-[360px] sm:max-w-[400px] aspect-[4/5] sm:aspect-[3/4] rounded-3xl overflow-hidden border-2 border-[#D4A396]/80 shadow-2xl hover-lift group bg-[#151A1F]">
+              <Image
+                src={LAWYER_PROFILE.photo}
+                alt={LAWYER_PROFILE.name}
+                fill
+                priority
+                className="object-cover object-top transition-transform duration-700 group-hover:scale-105"
+                sizes="(max-width: 768px) 90vw, 420px"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/25 to-transparent pointer-events-none" />
+              
+              {/* Badge Inferior com Nome e OAB */}
+              <div className="absolute bottom-5 left-5 right-5 text-white z-10 pointer-events-none">
+                <span className="text-[0.6875rem] uppercase tracking-widest text-[#D4A396] font-heading font-semibold block mb-1">
+                  Advogada Titular • {OFFICE_INFO.oab}
+                </span>
+                <p className="font-heading text-xl sm:text-2xl font-bold leading-tight text-white drop-shadow-sm">
+                  {LAWYER_PROFILE.name}
+                </p>
+                <p className="text-xs text-gray-200 font-body mt-1 leading-relaxed">
+                  Pós-graduada e MBA em Direito do Trabalho, Previdenciário e Acidentário
+                </p>
               </div>
-            </RevealOnScroll>
+            </div>
           </div>
 
           {/* Coluna de Informações (7 colunas) com fade in da esquerda para a direita */}
-          <div className="lg:col-span-7 flex flex-col justify-start space-y-6">
-            <RevealOnScroll direction="slide-right" delay={200}>
+          <div className="about-slide-right lg:col-span-7 flex flex-col justify-start space-y-6 will-change-transform">
             
             {/* Citação de Proposta de Valor */}
             <div className="p-5 sm:p-6 rounded-2xl bg-[var(--bg-secondary)]/60 border border-[var(--border-subtle)]/30 border-l-4 border-l-[#A6766A] shadow-2xs">
@@ -177,77 +238,70 @@ export function About() {
               </div>
             )}
 
-            </RevealOnScroll>
           </div>
         </div>
 
         {/* Bloco 2: Missão, Visão e Valores (Cards Estilo Editorial com fade in da esquerda para a direita) */}
-        <div className="grid md:grid-cols-3 gap-6 pt-6 border-t border-[var(--border-subtle)]/25">
+        <div ref={cardsRef} className="grid md:grid-cols-3 gap-6 pt-6 border-t border-[var(--border-subtle)]/25">
           
           {/* Missão */}
-          <RevealOnScroll direction="slide-right" delay={0}>
-            <div className="h-full p-6 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-subtle)]/35 shadow-xs flex flex-col justify-between hover-lift">
-              <div>
-                <div className="w-12 h-12 rounded-xl bg-[var(--bg-secondary)] flex items-center justify-center text-[#A6766A] mb-4">
-                  <Compass className="w-6 h-6" />
-                </div>
-                <span className="font-heading text-xs uppercase tracking-wider text-[#A6766A] font-bold block mb-1">
-                  Nossa Missão
-                </span>
-                <h3 className="font-heading text-lg font-bold text-[var(--text-main)] mb-3">
-                  Excelência Técnica & Empatia
-                </h3>
-                <p className="font-body text-xs sm:text-sm text-[var(--text-muted)] leading-relaxed">
-                  {OFFICE_INFO.pillars.mission}
-                </p>
+          <div className="about-card-item will-change-transform h-full p-6 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-subtle)]/35 shadow-xs flex flex-col justify-between hover-lift">
+            <div>
+              <div className="w-12 h-12 rounded-xl bg-[var(--bg-secondary)] flex items-center justify-center text-[#A6766A] mb-4">
+                <Compass className="w-6 h-6" />
               </div>
+              <span className="font-heading text-xs uppercase tracking-wider text-[#A6766A] font-bold block mb-1">
+                Nossa Missão
+              </span>
+              <h3 className="font-heading text-lg font-bold text-[var(--text-main)] mb-3">
+                Excelência Técnica & Empatia
+              </h3>
+              <p className="font-body text-xs sm:text-sm text-[var(--text-muted)] leading-relaxed">
+                {OFFICE_INFO.pillars.mission}
+              </p>
             </div>
-          </RevealOnScroll>
+          </div>
 
           {/* Visão */}
-          <RevealOnScroll direction="slide-right" delay={150}>
-            <div className="h-full p-6 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-subtle)]/35 shadow-xs flex flex-col justify-between hover-lift">
-              <div>
-                <div className="w-12 h-12 rounded-xl bg-[var(--bg-secondary)] flex items-center justify-center text-[#A6766A] mb-4">
-                  <Eye className="w-6 h-6" />
-                </div>
-                <span className="font-heading text-xs uppercase tracking-wider text-[#A6766A] font-bold block mb-1">
-                  Nossa Visão
-                </span>
-                <h3 className="font-heading text-lg font-bold text-[var(--text-main)] mb-3">
-                  Referência em Advocacia Personalizada
-                </h3>
-                <p className="font-body text-xs sm:text-sm text-[var(--text-muted)] leading-relaxed">
-                  {OFFICE_INFO.pillars.vision}
-                </p>
+          <div className="about-card-item will-change-transform h-full p-6 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-subtle)]/35 shadow-xs flex flex-col justify-between hover-lift">
+            <div>
+              <div className="w-12 h-12 rounded-xl bg-[var(--bg-secondary)] flex items-center justify-center text-[#A6766A] mb-4">
+                <Eye className="w-6 h-6" />
               </div>
+              <span className="font-heading text-xs uppercase tracking-wider text-[#A6766A] font-bold block mb-1">
+                Nossa Visão
+              </span>
+              <h3 className="font-heading text-lg font-bold text-[var(--text-main)] mb-3">
+                Referência em Advocacia Personalizada
+              </h3>
+              <p className="font-body text-xs sm:text-sm text-[var(--text-muted)] leading-relaxed">
+                {OFFICE_INFO.pillars.vision}
+              </p>
             </div>
-          </RevealOnScroll>
+          </div>
 
           {/* Valores */}
-          <RevealOnScroll direction="slide-right" delay={300}>
-            <div className="h-full p-6 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-subtle)]/35 shadow-xs flex flex-col justify-between hover-lift">
-              <div>
-                <div className="w-12 h-12 rounded-xl bg-[var(--bg-secondary)] flex items-center justify-center text-[#A6766A] mb-4">
-                  <ShieldCheck className="w-6 h-6" />
-                </div>
-                <span className="font-heading text-xs uppercase tracking-wider text-[#A6766A] font-bold block mb-1">
-                  Nossos Valores
-                </span>
-                <h3 className="font-heading text-lg font-bold text-[var(--text-main)] mb-3">
-                  Compromissos Fundamentais
-                </h3>
-                <ul className="space-y-2 text-xs sm:text-sm font-body text-[var(--text-muted)]">
-                  {OFFICE_INFO.pillars.values.map((val, vIdx) => (
-                    <li key={vIdx} className="flex items-start gap-2">
-                      <CheckCircle2 className="w-4 h-4 text-[#A6766A] flex-shrink-0 mt-0.5" />
-                      <span>{val}</span>
-                    </li>
-                  ))}
-                </ul>
+          <div className="about-card-item will-change-transform h-full p-6 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-subtle)]/35 shadow-xs flex flex-col justify-between hover-lift">
+            <div>
+              <div className="w-12 h-12 rounded-xl bg-[var(--bg-secondary)] flex items-center justify-center text-[#A6766A] mb-4">
+                <ShieldCheck className="w-6 h-6" />
               </div>
+              <span className="font-heading text-xs uppercase tracking-wider text-[#A6766A] font-bold block mb-1">
+                Nossos Valores
+              </span>
+              <h3 className="font-heading text-lg font-bold text-[var(--text-main)] mb-3">
+                Compromissos Fundamentais
+              </h3>
+              <ul className="space-y-2 text-xs sm:text-sm font-body text-[var(--text-muted)]">
+                {OFFICE_INFO.pillars.values.map((val, vIdx) => (
+                  <li key={vIdx} className="flex items-start gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-[#A6766A] flex-shrink-0 mt-0.5" />
+                    <span>{val}</span>
+                  </li>
+                ))}
+              </ul>
             </div>
-          </RevealOnScroll>
+          </div>
 
         </div>
 
