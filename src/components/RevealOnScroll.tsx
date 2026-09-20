@@ -37,6 +37,12 @@ export function RevealOnScroll({
             el.style.transform = "translate3d(0, 0, 0) scale(1)";
             el.style.filter = "blur(0)";
             observer.unobserve(el);
+
+            setTimeout(() => {
+              if (el) {
+                el.style.transform = "none";
+              }
+            }, 900 + delay);
           }
         });
       },
@@ -51,7 +57,7 @@ export function RevealOnScroll({
     return () => {
       observer.disconnect();
     };
-  }, []);
+  }, [delay]);
 
   const getInitialTransform = () => {
     switch (direction) {
@@ -62,9 +68,11 @@ export function RevealOnScroll({
       case "zoom":
         return "scale(0.92)";
       case "slide-left":
-        return "translate3d(36px, 0, 0)";
+        // Fade in da direita para a esquerda: começa 44px à direita
+        return "translate3d(44px, 0, 0)";
       case "slide-right":
-        return "translate3d(-36px, 0, 0)";
+        // Fade in da esquerda para a direita: começa 44px à esquerda
+        return "translate3d(-44px, 0, 0)";
       case "none":
       default:
         return "none";

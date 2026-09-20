@@ -54,7 +54,7 @@ export function InstitutionalPillars() {
           {pillars.map((item, idx) => {
             const Icon = item.icon;
             return (
-              <RevealOnScroll key={idx} delay={idx * 80} direction="zoom">
+              <RevealOnScroll key={idx} delay={idx * 160} direction="slide-left">
                 <div
                   className="flex flex-col items-start px-0 sm:px-6 pt-6 sm:pt-0 first:pt-0"
                 >
