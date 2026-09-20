@@ -205,3 +205,78 @@ h1, h2, h3, h4, h5, h6, .font-heading {
 .hover-lift:hover {
   transform: translateY(-4px);
 }
+
+/* ========================================================================= */
+/* TRANSIÇÃO SEÇÃO SOBRE A DRA. (Efeito Google Split-Screen com Scroll)     */
+/* ========================================================================= */
+
+@keyframes slideInScale {
+  0% {
+    transform: translateX(450px) scale(0.2);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0px) scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes slideUpMask {
+  0% {
+    transform: translateY(160px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0px);
+    opacity: 1;
+  }
+}
+
+@keyframes expandContainer {
+  0% {
+    transform: translateX(140px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0px);
+    opacity: 1;
+  }
+}
+
+.container_content {
+  width: 100%;
+}
+
+.container_content_inner {
+  width: 100%;
+}
+
+.container_outer_img {
+  width: 100%;
+  overflow: hidden;
+}
+
+.img-inner {
+  width: 100%;
+  will-change: transform, opacity;
+}
+
+.container_img {
+  width: 100%;
+}
+
+.title {
+  overflow: hidden;
+  height: auto;
+}
+
+.par {
+  overflow: hidden;
+  height: auto;
+}
+
+.btns {
+  overflow: hidden;
+  height: auto;
+  position: relative;
+}
