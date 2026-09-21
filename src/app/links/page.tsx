@@ -96,15 +96,15 @@ export default function LinksPage() {
             </span>
           </div>
 
-          <div className="relative z-10 my-auto py-4 flex flex-col items-center text-center w-full">
-            <div className="relative w-[85%] max-w-[380px] h-32 xl:h-40 mb-4">
+          <div className="relative z-10 my-auto py-2 flex flex-col items-center text-center w-full">
+            <div className="relative w-full max-w-[560px] xl:max-w-[650px] h-60 xl:h-72 mb-4">
               <Image
                 src="/logo_semfundo_escritabranca_paramodoescuro.png"
                 alt="Sloane Andrade Advocacia"
                 fill
                 priority
-                className="object-contain"
-                sizes="380px"
+                className="object-contain object-center drop-shadow-md"
+                sizes="(min-width: 1280px) 650px, 560px"
               />
             </div>
 
@@ -126,18 +126,18 @@ export default function LinksPage() {
         </div>
 
         {/* LADO DIREITO: Fundo Claro com Ações e Especialidades */}
-        <div className="bg-[#FFFFFF] flex flex-col justify-between p-6 xl:p-10 h-full overflow-hidden">
-          <div className="max-w-md mx-auto w-full flex flex-col justify-center h-full my-auto space-y-3 xl:space-y-4">
+        <div className="bg-[#FFFFFF] flex flex-col justify-between p-6 xl:p-8 h-full overflow-y-auto">
+          <div className="max-w-md mx-auto w-full flex flex-col justify-center my-auto space-y-3 xl:space-y-3.5 py-4">
             
             <div className="flex flex-col items-center text-center">
-              <div className="relative w-[75%] max-w-[320px] h-20 xl:h-24 mb-1">
+              <div className="relative w-full max-w-[460px] xl:max-w-[520px] h-40 xl:h-48 mb-2">
                 <Image
                   src="/logo_semfundo_escritapreta_paramodoclaro.png"
                   alt="Sloane Andrade Advocacia"
                   fill
                   priority
-                  className="object-contain object-center"
-                  sizes="320px"
+                  className="object-contain object-center drop-shadow-xs"
+                  sizes="(min-width: 1280px) 520px, 460px"
                 />
               </div>
               <span className="font-heading uppercase text-[0.6875rem] tracking-widest text-[#A6766A] block mb-0.5 font-bold">
