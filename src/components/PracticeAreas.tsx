@@ -28,20 +28,19 @@ export function PracticeAreas() {
           cards,
           {
             opacity: 0,
-            y: 60,
-            rotationX: 14,
-            transformPerspective: 1000,
+            y: 45,
+            scale: 0.96,
           },
           {
             opacity: 1,
             y: 0,
-            rotationX: 0,
-            duration: 0.9,
-            stagger: 0.12,
-            ease: "power3.out",
+            scale: 1,
+            duration: 0.7,
+            stagger: 0.1,
+            ease: "power2.out",
             scrollTrigger: {
               trigger: gridRef.current,
-              start: "top 78%",
+              start: "top 88%",
               toggleActions: "play none none reverse",
             },
           }

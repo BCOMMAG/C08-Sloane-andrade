@@ -58,11 +58,11 @@ export function InstitutionalPillars() {
           { scaleX: 0, transformOrigin: "left center" },
           {
             scaleX: 1,
-            duration: 1.2,
+            duration: 1,
             ease: "power2.out",
             scrollTrigger: {
               trigger: sectionRef.current,
-              start: "top 85%",
+              start: "top 90%",
               toggleActions: "play none none reverse",
             },
           }
@@ -71,20 +71,19 @@ export function InstitutionalPillars() {
 
       const pillarItems = triggerEl.querySelectorAll(".pillar-item");
       if (pillarItems.length > 0) {
-        // Revelação em cascata com leve rotação e fade-up
+        // Revelação em cascata com fade-up
         gsap.fromTo(
           pillarItems,
-          { y: 40, opacity: 0, scale: 0.96 },
+          { y: 35, opacity: 0 },
           {
             y: 0,
             opacity: 1,
-            scale: 1,
-            duration: 0.8,
-            stagger: 0.15,
-            ease: "power3.out",
+            duration: 0.7,
+            stagger: 0.12,
+            ease: "power2.out",
             scrollTrigger: {
               trigger: triggerEl,
-              start: "top 80%",
+              start: "top 88%",
               toggleActions: "play none none reverse",
             },
           }
@@ -101,11 +100,11 @@ export function InstitutionalPillars() {
           const counterObj = { val: 0 };
           gsap.to(counterObj, {
             val: targetValue,
-            duration: 1.6,
+            duration: 1.4,
             ease: "power2.out",
             scrollTrigger: {
               trigger: triggerEl,
-              start: "top 80%",
+              start: "top 88%",
               toggleActions: "play none none reverse",
             },
             onUpdate: () => {

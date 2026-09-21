@@ -26,19 +26,20 @@ export function SmoothScroll({ children }: { children: ReactNode }) {
     });
 
     // Sincronização obrigatória entre Lenis e GSAP ScrollTrigger
-    lenis.on("scroll", ScrollTrigger.update);
+    lenis.on("scroll", () => {
+      ScrollTrigger.update();
+    });
 
     const updateTicker = (time: number) => {
       lenis.raf(time * 1000);
     };
 
     gsap.ticker.add(updateTicker);
-    gsap.ticker.lagSmoothing(0);
 
     // Recalcula triggers após montagem inicial
     const timeout = setTimeout(() => {
       ScrollTrigger.refresh();
-    }, 200);
+    }, 250);
 
     return () => {
       clearTimeout(timeout);

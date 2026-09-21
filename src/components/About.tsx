@@ -36,7 +36,7 @@ export function About() {
         const tl = gsap.timeline({
           scrollTrigger: {
             trigger: sectionRef.current,
-            start: "top 72%",
+            start: "top 85%",
             toggleActions: "play none none reverse",
           },
         });

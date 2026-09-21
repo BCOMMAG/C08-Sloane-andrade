@@ -1,4 +1,4 @@
-﻿import type { Metadata } from "next";
+import type { Metadata } from "next";
 import { Philosopher, Mulish } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/context/ThemeContext";
@@ -102,7 +102,7 @@ export default function RootLayout({
   return (
     <html
       lang="pt-BR"
-      className={`${philosopher.variable} ${mulish.variable} scroll-smooth`}
+      className={`${philosopher.variable} ${mulish.variable}`}
       suppressHydrationWarning
     >
       <head>
