@@ -237,108 +237,129 @@ export default function LinksPage() {
 
       {/* ===================== VERSÃO MOBILE (Bio Instagram Otimizada) ===================== */}
       <div className="lg:hidden relative flex flex-col justify-between min-h-[100dvh] w-full px-5 py-6 overflow-y-auto bg-[#FFFFFF]">
-        {/* Fundo Geométrico: Linhas e Formas em Sobreposição na Cor Primária (#A6766A / #D4A396) */}
-        <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
+        {/* Fundo Geométrico Sofisticado com Linhas e Formas na Cor Primária (#A6766A / #D4A396) */}
+        <div aria-hidden="true" className="absolute inset-0 pointer-events-none overflow-hidden z-0 select-none">
+          {/* 1. Padrão Geométrico Repetido com Linhas Cruzadas e Losangos na Cor Primária */}
           <svg
-            className="absolute inset-0 w-full h-full opacity-70"
+            className="absolute inset-0 w-full h-full opacity-25"
             xmlns="http://www.w3.org/2000/svg"
-            preserveAspectRatio="none"
+            width="100%"
+            height="100%"
           >
             <defs>
-              <linearGradient id="mobileLineGradPrimary" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="#D4A396" stopOpacity="0.1" />
-                <stop offset="35%" stopColor="#A6766A" stopOpacity="0.55" />
-                <stop offset="70%" stopColor="#8d5e53" stopOpacity="0.4" />
-                <stop offset="100%" stopColor="#D4A396" stopOpacity="0.1" />
-              </linearGradient>
-
-              <linearGradient id="mobileLineGradCross" x1="100%" y1="0%" x2="0%" y2="100%">
-                <stop offset="0%" stopColor="#A6766A" stopOpacity="0.1" />
-                <stop offset="45%" stopColor="#A6766A" stopOpacity="0.6" />
-                <stop offset="85%" stopColor="#D4A396" stopOpacity="0.25" />
-                <stop offset="100%" stopColor="#A6766A" stopOpacity="0.05" />
-              </linearGradient>
-
-              <pattern id="mobileFineGrid" width="40" height="40" patternUnits="userSpaceOnUse">
-                <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#D4A396" strokeWidth="0.5" strokeOpacity="0.2" />
+              <pattern
+                id="sloane-mobile-geom-pattern"
+                width="80"
+                height="80"
+                patternUnits="userSpaceOnUse"
+              >
+                {/* Linhas de contorno sutil do módulo */}
+                <path
+                  d="M0 0h80v80H0z"
+                  fill="none"
+                  stroke="#D4A396"
+                  strokeWidth="0.5"
+                  strokeOpacity="0.4"
+                />
+                {/* Linhas diagonais se cruzando de canto a canto */}
+                <path
+                  d="M0 0l80 80M80 0L0 80"
+                  fill="none"
+                  stroke="#A6766A"
+                  strokeWidth="0.6"
+                  strokeOpacity="0.5"
+                />
+                {/* Losango geométrico central sobreposto */}
+                <path
+                  d="M40 0l40 40-40 40-40-40z"
+                  fill="none"
+                  stroke="#A6766A"
+                  strokeWidth="0.8"
+                  strokeOpacity="0.7"
+                />
+                {/* Segundo losango interno menor para dar efeito de profundidade */}
+                <path
+                  d="M40 14l26 26-26 26-26-26z"
+                  fill="none"
+                  stroke="#D4A396"
+                  strokeWidth="0.5"
+                  strokeOpacity="0.5"
+                />
+                {/* Marcadores de nós elegantes nos vértices */}
+                <circle cx="40" cy="40" r="2" fill="#A6766A" fillOpacity="0.8" />
+                <circle cx="0" cy="0" r="1.5" fill="#D4A396" fillOpacity="0.7" />
+                <circle cx="80" cy="0" r="1.5" fill="#D4A396" fillOpacity="0.7" />
+                <circle cx="0" cy="80" r="1.5" fill="#D4A396" fillOpacity="0.7" />
+                <circle cx="80" cy="80" r="1.5" fill="#D4A396" fillOpacity="0.7" />
+                <circle cx="40" cy="0" r="1.2" fill="#A6766A" fillOpacity="0.7" />
+                <circle cx="40" cy="80" r="1.2" fill="#A6766A" fillOpacity="0.7" />
+                <circle cx="0" cy="40" r="1.2" fill="#A6766A" fillOpacity="0.7" />
+                <circle cx="80" cy="40" r="1.2" fill="#A6766A" fillOpacity="0.7" />
               </pattern>
             </defs>
+            <rect width="100%" height="100%" fill="url(#sloane-mobile-geom-pattern)" />
+          </svg>
 
-            {/* Grid sutil de precisão ao fundo */}
-            <rect width="100%" height="100%" fill="url(#mobileFineGrid)" />
+          {/* 2. Linhas Dinâmicas Vetoriais Maiores se Sobrepondo e Passando pelo Fundo */}
+          <svg
+            className="absolute inset-0 w-full h-full opacity-40 pointer-events-none"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 400 800"
+            preserveAspectRatio="xMidYMid slice"
+          >
+            <defs>
+              <linearGradient id="streamLine1" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="#A6766A" stopOpacity="0.1" />
+                <stop offset="40%" stopColor="#A6766A" stopOpacity="0.8" />
+                <stop offset="70%" stopColor="#D4A396" stopOpacity="0.6" />
+                <stop offset="100%" stopColor="#A6766A" stopOpacity="0.1" />
+              </linearGradient>
+              <linearGradient id="streamLine2" x1="100%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stopColor="#D4A396" stopOpacity="0.1" />
+                <stop offset="50%" stopColor="#A6766A" stopOpacity="0.85" />
+                <stop offset="100%" stopColor="#D4A396" stopOpacity="0.1" />
+              </linearGradient>
+            </defs>
 
-            {/* Linhas principais diagonais se sobrepondo e passando pela tela */}
-            <line x1="-15%" y1="8%" x2="115%" y2="48%" stroke="url(#mobileLineGradPrimary)" strokeWidth="1.75" />
-            <line x1="-15%" y1="12%" x2="115%" y2="52%" stroke="url(#mobileLineGradPrimary)" strokeWidth="0.75" strokeDasharray="6 4" strokeOpacity="0.6" />
+            {/* Linha mestra diagonal que passa cortando de ponta a ponta */}
+            <line x1="-50" y1="120" x2="450" y2="620" stroke="url(#streamLine1)" strokeWidth="1.5" />
+            <line x1="-30" y1="100" x2="470" y2="600" stroke="#D4A396" strokeWidth="0.75" strokeDasharray="6 4" strokeOpacity="0.5" />
 
-            {/* Linhas cruzando em ângulo oposto (sobreposição) */}
-            <line x1="115%" y1="6%" x2="-15%" y2="44%" stroke="url(#mobileLineGradCross)" strokeWidth="1.75" />
-            <line x1="115%" y1="10%" x2="-15%" y2="48%" stroke="url(#mobileLineGradCross)" strokeWidth="0.75" strokeDasharray="4 4" strokeOpacity="0.5" />
+            {/* Linha que cruza em ângulo oposto, sobrepondo a primeira */}
+            <line x1="450" y1="150" x2="-50" y2="650" stroke="url(#streamLine2)" strokeWidth="1.5" />
+            <line x1="470" y1="170" x2="-30" y2="670" stroke="#A6766A" strokeWidth="0.75" strokeDasharray="4 4" strokeOpacity="0.5" />
 
-            {/* Linhas centrais transpassando o bloco */}
-            <line x1="-20%" y1="58%" x2="120%" y2="82%" stroke="url(#mobileLineGradPrimary)" strokeWidth="1.5" />
-            <line x1="120%" y1="52%" x2="-20%" y2="88%" stroke="url(#mobileLineGradCross)" strokeWidth="1.5" />
+            {/* Linha de passagem horizontal suave no terço inferior */}
+            <line x1="-20" y1="460" x2="420" y2="460" stroke="url(#streamLine1)" strokeWidth="1" strokeOpacity="0.3" />
 
-            {/* Linhas transversais de sustentação */}
-            <line x1="25%" y1="0%" x2="85%" y2="100%" stroke="url(#mobileLineGradPrimary)" strokeWidth="1.25" strokeOpacity="0.45" />
-            <line x1="75%" y1="0%" x2="15%" y2="100%" stroke="url(#mobileLineGradCross)" strokeWidth="1.25" strokeOpacity="0.45" />
-
-            {/* Formas Geométricas: Losangos decorativos atrás da logo */}
+            {/* Losangos grandes elegantes nos eixos centrais */}
             <rect
-              x="50%"
-              y="18%"
-              width="90"
-              height="90"
-              transform="translate(-45, -45) rotate(45)"
-              fill="#A6766A"
-              fillOpacity="0.04"
+              x="200"
+              y="180"
+              width="100"
+              height="100"
+              transform="translate(-50, -50) rotate(45 200 180)"
+              fill="none"
               stroke="#A6766A"
-              strokeWidth="1"
-              strokeOpacity="0.4"
+              strokeWidth="0.75"
+              strokeOpacity="0.3"
             />
             <rect
-              x="50%"
-              y="18%"
-              width="130"
-              height="130"
-              transform="translate(-65, -65) rotate(45)"
+              x="200"
+              y="600"
+              width="80"
+              height="80"
+              transform="translate(-40, -40) rotate(45 200 600)"
               fill="none"
               stroke="#D4A396"
               strokeWidth="0.75"
               strokeOpacity="0.25"
-              strokeDasharray="4 4"
             />
-
-            {/* Formas geométricas poligonais sobrepostas */}
-            <polygon
-              points="-10,240 120,300 40,420"
-              fill="#A6766A"
-              fillOpacity="0.03"
-              stroke="#A6766A"
-              strokeWidth="1"
-              strokeOpacity="0.3"
-            />
-            <polygon
-              points="420,480 290,560 380,680"
-              fill="#D4A396"
-              fillOpacity="0.03"
-              stroke="#D4A396"
-              strokeWidth="1"
-              strokeOpacity="0.3"
-            />
-
-            {/* Pontos de Interseção / Nós Geométricos */}
-            <circle cx="50%" cy="26%" r="3.5" fill="#A6766A" fillOpacity="0.7" />
-            <circle cx="50%" cy="26%" r="8" stroke="#A6766A" strokeWidth="0.75" strokeOpacity="0.4" fill="none" />
-
-            <circle cx="28%" cy="66%" r="3" fill="#A6766A" fillOpacity="0.6" />
-            <circle cx="72%" cy="74%" r="3" fill="#D4A396" fillOpacity="0.6" />
           </svg>
 
-          {/* Suaves halos de luz na cor primária para profundidade */}
-          <div className="absolute top-12 left-1/2 -translate-x-1/2 w-80 h-80 bg-[#D4A396]/15 rounded-full blur-3xl pointer-events-none" />
-          <div className="absolute bottom-16 right-0 w-72 h-72 bg-[#A6766A]/10 rounded-full blur-3xl pointer-events-none" />
-          <div className="absolute top-1/2 -left-16 w-56 h-56 bg-[#A6766A]/10 rounded-full blur-2xl pointer-events-none" />
+          {/* 3. Gradiente Suave de Iluminação Central em Tom Rosé/Terracota */}
+          <div className="absolute top-10 left-1/2 -translate-x-1/2 w-72 h-72 bg-[#D4A396]/15 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute bottom-20 right-0 w-64 h-64 bg-[#A6766A]/10 rounded-full blur-3xl pointer-events-none" />
         </div>
 
         {/* Cabeçalho Mobile com a Logo com o dobro do tamanho no mesmo local */}
