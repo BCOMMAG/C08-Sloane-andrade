@@ -151,15 +151,15 @@ export function EducationalSection() {
                       : "bg-[var(--bg-card)] border-[var(--border-subtle)]/30 hover:border-[#A6766A]/60"
                   }`}
                 >
-                  <div className="space-y-1">
+                  <div className="space-y-1 min-w-0 flex-1 pr-3">
                     <div className="flex items-center gap-2 text-xs font-heading">
                       <span className="text-[#A6766A] font-bold">{topic.number}.</span>
                       <span className="text-[var(--text-muted)] uppercase tracking-wider">{topic.category}</span>
                     </div>
-                    <h3 className="font-heading text-sm sm:text-base font-bold text-[var(--text-main)] leading-snug line-clamp-2">
+                    <h3 className="font-heading text-sm sm:text-base font-bold text-[var(--text-main)] leading-snug break-words">
                       {topic.title}
                     </h3>
-                    <div className="flex items-center gap-1.5 text-[0.6875rem] text-[var(--text-muted)] font-body">
+                    <div className="flex items-center gap-1.5 text-[0.6875rem] text-[var(--text-muted)] font-body pt-0.5">
                       <Clock className="w-3 h-3 text-[#A6766A]" />
                       <span>{topic.readTime}</span>
                     </div>
@@ -234,7 +234,7 @@ export function EducationalSection() {
         </div>
 
         {/* ========================================================================= */}
-        {/* MODELO MOBILE (< MD): FORMATO RESUMIDO (CABEM ATÉ 4 ÁREAS NA TELA)       */}
+        {/* MODELO MOBILE (< MD): FORMATO RESUMIDO SEM CORTAR TÍTULOS E INFORMAÇÕES   */}
         {/* ========================================================================= */}
         <div className="block md:hidden space-y-3">
           {EDUCATIONAL_TOPICS.map((topic) => {
@@ -247,20 +247,20 @@ export function EducationalSection() {
                   isExpanded ? "border-[#A6766A] shadow-md" : "border-[var(--border-subtle)]/35 shadow-2xs"
                 }`}
               >
-                {/* Linha Resumida Compacta (Altura ~75px) */}
+                {/* Linha Resumida Sem Truncate: Título completo com quebra natural */}
                 <div
                   onClick={() => toggleMobileTopic(topic.id)}
-                  className="p-3.5 flex items-center justify-between gap-3 cursor-pointer select-none"
+                  className="p-3.5 flex items-start justify-between gap-3 cursor-pointer select-none"
                 >
-                  <div className="flex items-center gap-2.5 min-w-0">
-                    <span className="font-heading text-sm font-bold text-[#A6766A] flex-shrink-0">
+                  <div className="flex items-start gap-2.5 min-w-0 flex-1">
+                    <span className="font-heading text-sm font-bold text-[#A6766A] flex-shrink-0 mt-0.5">
                       {topic.number}
                     </span>
-                    <div className="min-w-0">
-                      <span className="text-[0.6875rem] font-heading uppercase tracking-wider text-[#A6766A] block truncate">
+                    <div className="min-w-0 flex-1">
+                      <span className="text-[0.6875rem] font-heading uppercase tracking-wider text-[#A6766A] block break-words">
                         {topic.category}
                       </span>
-                      <h3 className="font-heading text-sm font-bold text-[var(--text-main)] truncate leading-tight">
+                      <h3 className="font-heading text-sm font-bold text-[var(--text-main)] leading-snug break-words">
                         {topic.title}
                       </h3>
                     </div>
@@ -268,7 +268,7 @@ export function EducationalSection() {
 
                   <button
                     type="button"
-                    className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[0.6875rem] font-heading font-semibold transition-all flex-shrink-0 ${
+                    className={`inline-flex items-center gap-1 px-2.5 py-1.5 rounded-full text-[0.6875rem] font-heading font-semibold transition-all flex-shrink-0 self-center ${
                       isExpanded
                         ? "bg-[#A6766A] text-white"
                         : "bg-[var(--bg-secondary)] text-[#A6766A] border border-[#A6766A]/30"

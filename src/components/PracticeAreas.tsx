@@ -51,7 +51,7 @@ export function PracticeAreas() {
         );
       }
 
-      // 2. DESKTOP: Efeito de Sobreposição das 3 áreas de baixo sobre as 3 de cima no Scroll
+      // 2. DESKTOP: Sobreposição com Pinning — Elimina qualquer espaço em branco na parte inferior
       const mm = gsap.matchMedia();
 
       mm.add("(min-width: 768px)", () => {
@@ -59,9 +59,11 @@ export function PracticeAreas() {
           const tl = gsap.timeline({
             scrollTrigger: {
               trigger: desktopContainerRef.current,
-              start: "top 45%",
-              end: "bottom 70%",
-              scrub: 1.2,
+              start: "top 20%",
+              end: "+=520",
+              pin: true,
+              scrub: 1,
+              anticipatePin: 1,
             },
           });
 
@@ -70,22 +72,21 @@ export function PracticeAreas() {
             row1Ref.current,
             {
               scale: 0.94,
-              opacity: 0.35,
-              y: -20,
+              opacity: 0.25,
               ease: "none",
             },
             0
           );
 
-          // A linha 2 desliza para cima e sobrepõe a linha 1 com elevação física e sombra
+          // A linha 2 entra suavemente por cima, cobrindo a linha 1 perfeitamente
           tl.fromTo(
             row2Ref.current,
             {
-              y: 0,
-              opacity: 0.85,
+              y: 420,
+              opacity: 0,
             },
             {
-              y: -460, // Sobe cobrindo a primeira linha
+              y: 0,
               opacity: 1,
               ease: "none",
             },
@@ -129,11 +130,11 @@ export function PracticeAreas() {
         </div>
 
         {/* ========================================================================= */}
-        {/* MODELO DESKTOP (MD+): EFEITO DE SOBREPOSIÇÃO NO SCROLL                    */}
+        {/* MODELO DESKTOP (MD+): SOBREPOSIÇÃO PINNADA SEM ESPAÇO VAZIO INFERIOR     */}
         {/* ========================================================================= */}
-        <div ref={desktopContainerRef} className="hidden md:block relative pb-20">
-          {/* Linha 1 (Fica embaixo quando a linha 2 sobrepõe) */}
-          <div ref={row1Ref} className="relative z-10 grid md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 will-change-transform">
+        <div ref={desktopContainerRef} className="hidden md:block relative min-h-[500px]">
+          {/* Linha 1 (Base - Fica no fluxo normal) */}
+          <div ref={row1Ref} className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 will-change-transform">
             {topRowAreas.map((area) => (
               <div
                 key={area.id}
@@ -186,18 +187,15 @@ export function PracticeAreas() {
             ))}
           </div>
 
-          {/* Espaçador entre linhas no desktop */}
-          <div className="h-8 lg:h-12" />
-
-          {/* Linha 2 (Desliza para cima sobrepondo a Linha 1 no scroll) */}
+          {/* Linha 2 (Sobrepõe a Linha 1 no mesmo espaço vertical com z-20 e sombra 2xl) */}
           <div
             ref={row2Ref}
-            className="relative z-20 grid md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 will-change-transform"
+            className="absolute inset-x-0 top-0 z-20 grid md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 will-change-transform pointer-events-auto"
           >
             {bottomRowAreas.map((area) => (
               <div
                 key={area.id}
-                className="h-full p-6 sm:p-8 rounded-2xl bg-[var(--bg-card)] border-2 border-[#D4A396]/60 shadow-2xl flex flex-col justify-between group transition-all duration-300"
+                className="h-full p-6 sm:p-8 rounded-2xl bg-[var(--bg-card)] border-2 border-[#D4A396]/70 shadow-2xl flex flex-col justify-between group transition-all duration-300"
               >
                 <div>
                   <div className="flex items-center justify-between mb-4">
@@ -248,7 +246,7 @@ export function PracticeAreas() {
         </div>
 
         {/* ========================================================================= */}
-        {/* MODELO MOBILE (< MD): FORMATO RESUMIDO (CABEM ATÉ 4 ÁREAS NA TELA)       */}
+        {/* MODELO MOBILE (< MD): FORMATO RESUMIDO SEM CORTAR TÍTULOS E INFORMAÇÕES   */}
         {/* ========================================================================= */}
         <div className="block md:hidden space-y-3">
           {PRACTICE_AREAS.map((area) => {
@@ -261,20 +259,20 @@ export function PracticeAreas() {
                   isExpanded ? "border-[#A6766A] shadow-md" : "border-[var(--border-subtle)]/35 shadow-2xs"
                 }`}
               >
-                {/* Cabeçalho Compacto do Card Resumido (Altura ~75px) */}
+                {/* Linha Resumida Sem Truncate: visualiza título completo com quebra natural */}
                 <div
                   onClick={() => toggleMobileExpand(area.id)}
                   className="p-3.5 flex items-center justify-between gap-3 cursor-pointer select-none"
                 >
-                  <div className="flex items-center gap-2.5 min-w-0">
-                    <span className="font-heading text-sm font-bold text-[#A6766A] flex-shrink-0">
+                  <div className="flex items-start gap-2.5 min-w-0 flex-1">
+                    <span className="font-heading text-sm font-bold text-[#A6766A] flex-shrink-0 mt-0.5">
                       {area.code}
                     </span>
-                    <div className="min-w-0">
-                      <h3 className="font-heading text-sm font-bold text-[var(--text-main)] truncate leading-tight">
+                    <div className="min-w-0 flex-1">
+                      <h3 className="font-heading text-sm font-bold text-[var(--text-main)] leading-snug break-words">
                         {area.title}
                       </h3>
-                      <span className="text-[0.6875rem] font-heading text-[#A6766A] block truncate">
+                      <span className="text-[0.6875rem] font-heading text-[#A6766A] block mt-0.5 break-words">
                         {area.subtitle}
                       </span>
                     </div>
@@ -282,7 +280,7 @@ export function PracticeAreas() {
 
                   <button
                     type="button"
-                    className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[0.6875rem] font-heading font-semibold transition-all flex-shrink-0 ${
+                    className={`inline-flex items-center gap-1 px-2.5 py-1.5 rounded-full text-[0.6875rem] font-heading font-semibold transition-all flex-shrink-0 self-center ${
                       isExpanded
                         ? "bg-[#A6766A] text-white"
                         : "bg-[var(--bg-secondary)] text-[#A6766A] border border-[#A6766A]/30"
