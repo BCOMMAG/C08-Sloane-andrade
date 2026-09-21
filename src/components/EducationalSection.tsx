@@ -1,8 +1,9 @@
 "use client";
 
 import { useState, useRef } from "react";
-import { EDUCATIONAL_TOPICS } from "@/lib/data";
-import { BookOpen, Clock, ChevronRight, ShieldAlert } from "lucide-react";
+import { EDUCATIONAL_TOPICS, OFFICE_INFO } from "@/lib/data";
+import { BookOpen, Clock, ChevronRight, ShieldAlert, MessageSquare, ChevronDown } from "lucide-react";
+import { WhatsAppIcon } from "@/components/SocialIcons";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
@@ -15,6 +16,16 @@ export function EducationalSection() {
   const [selectedId, setSelectedId] = useState(EDUCATIONAL_TOPICS[0].id);
   const activeTopic = EDUCATIONAL_TOPICS.find((t) => t.id === selectedId) || EDUCATIONAL_TOPICS[0];
 
+  // Estado para acordeão mobile condensado
+  const [expandedMobileTopicId, setExpandedMobileTopicId] = useState<string | null>(null);
+
+  const toggleMobileTopic = (id: string) => {
+    setExpandedMobileTopicId((prev) => (prev === id ? null : id));
+    setTimeout(() => {
+      ScrollTrigger.refresh();
+    }, 200);
+  };
+
   const sectionRef = useRef<HTMLElement>(null);
   const headerRef = useRef<HTMLDivElement>(null);
   const leftColRef = useRef<HTMLDivElement>(null);
@@ -22,7 +33,7 @@ export function EducationalSection() {
 
   useGSAP(
     () => {
-      // 1. Cabeçalho
+      // 1. Cabeçalho com animação bidirecional
       if (headerRef.current) {
         gsap.fromTo(
           headerRef.current,
@@ -35,13 +46,13 @@ export function EducationalSection() {
             scrollTrigger: {
               trigger: headerRef.current,
               start: "top 85%",
-              once: true,
+              toggleActions: "play reverse play reverse",
             },
           }
         );
       }
 
-      // 2. Coluna esquerda com lista de tópicos
+      // 2. Coluna esquerda
       if (leftColRef.current) {
         gsap.fromTo(
           leftColRef.current,
@@ -54,13 +65,13 @@ export function EducationalSection() {
             scrollTrigger: {
               trigger: leftColRef.current,
               start: "top 85%",
-              once: true,
+              toggleActions: "play reverse play reverse",
             },
           }
         );
       }
 
-      // 3. Coluna direita com conteúdo detalhado
+      // 3. Coluna direita
       if (rightColRef.current) {
         gsap.fromTo(
           rightColRef.current,
@@ -73,7 +84,7 @@ export function EducationalSection() {
             scrollTrigger: {
               trigger: rightColRef.current,
               start: "top 85%",
-              once: true,
+              toggleActions: "play reverse play reverse",
             },
           }
         );
@@ -81,6 +92,11 @@ export function EducationalSection() {
     },
     { scope: sectionRef }
   );
+
+  const getWhatsAppMessageUrl = (topicTitle: string) => {
+    const text = `Olá, Dra. Sloane! Li o conteúdo educativo sobre "${topicTitle}" no seu site e gostaria de saber mais a respeito do meu caso.`;
+    return `https://wa.me/5517981217474?text=${encodeURIComponent(text)}`;
+  };
 
   return (
     <section
@@ -116,9 +132,11 @@ export function EducationalSection() {
           </div>
         </div>
 
-        {/* Layout Interativo: Lista de Artigos à Esquerda + Conteúdo Completo à Direita */}
-        <div className="grid lg:grid-cols-12 gap-8 items-start">
-          {/* Navegador de Artigos */}
+        {/* ========================================================================= */}
+        {/* MODELO DESKTOP (MD+): LISTA LATERAL + PAINEL DE LEITURA COM BOTÃO CTA     */}
+        {/* ========================================================================= */}
+        <div className="hidden md:grid lg:grid-cols-12 gap-8 items-start">
+          {/* Navegador de Artigos à Esquerda */}
           <div ref={leftColRef} className="lg:col-span-5 space-y-3 will-change-transform">
             {EDUCATIONAL_TOPICS.map((topic) => {
               const isSelected = topic.id === selectedId;
@@ -156,7 +174,7 @@ export function EducationalSection() {
             })}
           </div>
 
-          {/* Painel de Leitura Pedagógica */}
+          {/* Painel de Leitura Pedagógica com Botão Personalizado de WhatsApp */}
           <div ref={rightColRef} className="lg:col-span-7 p-6 sm:p-10 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-subtle)]/40 shadow-xs space-y-6 will-change-transform">
             <div className="flex items-center justify-between border-b border-[var(--border-subtle)]/25 pb-4">
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[var(--bg-secondary)] text-[#A6766A] font-heading text-xs font-bold uppercase tracking-wider">
@@ -184,13 +202,118 @@ export function EducationalSection() {
               ))}
             </div>
 
-            <div className="pt-6 border-t border-[var(--border-subtle)]/25 bg-[var(--bg-secondary)]/50 -mx-6 -mb-6 sm:-mx-10 sm:-mb-10 p-4 sm:p-6 rounded-b-2xl">
+            {/* BOTÃO PERSONALIZADO NO FINAL DE CADA CONTEÚDO (Item 6) */}
+            <div className="pt-5 border-t border-[var(--border-subtle)]/30 flex flex-col sm:flex-row items-center justify-between gap-4 bg-[var(--bg-secondary)]/40 p-4 rounded-xl">
+              <div className="text-left">
+                <span className="font-heading text-xs font-bold text-[var(--text-main)] block">
+                  Ficou com alguma dúvida específica sobre este tema?
+                </span>
+                <span className="text-[0.6875rem] font-body text-[var(--text-muted)]">
+                  Converse diretamente com a Dra. Sloane Ferreira de Andrade.
+                </span>
+              </div>
+
+              <a
+                href={getWhatsAppMessageUrl(activeTopic.title)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-pill bg-[#25D366] hover:bg-[#20ba59] hover:scale-105 text-white py-2.5 px-5 text-xs font-semibold gap-2 shadow-sm whitespace-nowrap transition-all flex items-center flex-shrink-0 cursor-pointer"
+              >
+                <WhatsAppIcon className="w-4 h-4 text-white" />
+                <span>Gostaria de saber mais</span>
+              </a>
+            </div>
+
+            <div className="pt-4 border-t border-[var(--border-subtle)]/25 bg-[var(--bg-secondary)]/30 -mx-6 -mb-6 sm:-mx-10 sm:-mb-10 p-4 sm:p-6 rounded-b-2xl">
               <p className="text-[0.6875rem] font-body text-[var(--text-muted)] flex items-center gap-2">
                 <ShieldAlert className="w-4 h-4 text-[#A6766A] flex-shrink-0" />
                 <span>{activeTopic.oabDisclaimer}</span>
               </p>
             </div>
           </div>
+        </div>
+
+        {/* ========================================================================= */}
+        {/* MODELO MOBILE (< MD): FORMATO RESUMIDO (CABEM ATÉ 4 ÁREAS NA TELA)       */}
+        {/* ========================================================================= */}
+        <div className="block md:hidden space-y-3">
+          {EDUCATIONAL_TOPICS.map((topic) => {
+            const isExpanded = expandedMobileTopicId === topic.id;
+
+            return (
+              <div
+                key={topic.id}
+                className={`rounded-2xl border transition-all duration-300 bg-[var(--bg-card)] overflow-hidden ${
+                  isExpanded ? "border-[#A6766A] shadow-md" : "border-[var(--border-subtle)]/35 shadow-2xs"
+                }`}
+              >
+                {/* Linha Resumida Compacta (Altura ~75px) */}
+                <div
+                  onClick={() => toggleMobileTopic(topic.id)}
+                  className="p-3.5 flex items-center justify-between gap-3 cursor-pointer select-none"
+                >
+                  <div className="flex items-center gap-2.5 min-w-0">
+                    <span className="font-heading text-sm font-bold text-[#A6766A] flex-shrink-0">
+                      {topic.number}
+                    </span>
+                    <div className="min-w-0">
+                      <span className="text-[0.6875rem] font-heading uppercase tracking-wider text-[#A6766A] block truncate">
+                        {topic.category}
+                      </span>
+                      <h3 className="font-heading text-sm font-bold text-[var(--text-main)] truncate leading-tight">
+                        {topic.title}
+                      </h3>
+                    </div>
+                  </div>
+
+                  <button
+                    type="button"
+                    className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[0.6875rem] font-heading font-semibold transition-all flex-shrink-0 ${
+                      isExpanded
+                        ? "bg-[#A6766A] text-white"
+                        : "bg-[var(--bg-secondary)] text-[#A6766A] border border-[#A6766A]/30"
+                    }`}
+                    aria-expanded={isExpanded}
+                  >
+                    <span>{isExpanded ? "Fechar" : "Saber mais"}</span>
+                    <ChevronDown
+                      className={`w-3 h-3 transition-transform duration-300 ${
+                        isExpanded ? "rotate-180" : ""
+                      }`}
+                    />
+                  </button>
+                </div>
+
+                {/* Conteúdo Expansível no Mobile */}
+                {isExpanded && (
+                  <div className="px-4 pb-4 pt-1 border-t border-[var(--border-subtle)]/25 space-y-3 animate-fade-in-down">
+                    <p className="font-body text-xs text-[#A6766A] italic pt-2">
+                      {topic.summary}
+                    </p>
+
+                    <div className="space-y-2 text-xs font-body text-[var(--text-muted)] leading-relaxed">
+                      {topic.content.map((p, idx) => (
+                        <p key={idx}>{p}</p>
+                      ))}
+                    </div>
+
+                    {/* Botão WhatsApp personalizado no mobile */}
+                    <div className="pt-3 border-t border-[var(--border-subtle)]/20 flex flex-col gap-2">
+                      <a
+                        href={getWhatsAppMessageUrl(topic.title)}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="btn-pill bg-[#25D366] hover:bg-[#20ba59] text-white py-2.5 px-4 text-xs font-semibold gap-2 shadow-xs justify-center flex items-center"
+                      >
+                        <WhatsAppIcon className="w-4 h-4 text-white" />
+                        <span>Gostaria de saber mais</span>
+                      </a>
+                    </div>
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </div>
       </div>
     </section>

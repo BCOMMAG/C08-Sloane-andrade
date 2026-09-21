@@ -1,8 +1,8 @@
 "use client";
 
-import { useRef } from "react";
+import { useState, useRef } from "react";
 import { PRACTICE_AREAS, OFFICE_INFO } from "@/lib/data";
-import { CheckCircle2, MessageSquare, ArrowUpRight, Scale } from "lucide-react";
+import { CheckCircle2, MessageSquare, ArrowUpRight, Scale, ChevronDown } from "lucide-react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
@@ -14,11 +14,25 @@ if (typeof window !== "undefined") {
 export function PracticeAreas() {
   const sectionRef = useRef<HTMLElement>(null);
   const headerRef = useRef<HTMLDivElement>(null);
-  const gridRef = useRef<HTMLDivElement>(null);
+  
+  // Refs para modelo Desktop (Efeito de Sobreposição / Stacking)
+  const desktopContainerRef = useRef<HTMLDivElement>(null);
+  const row1Ref = useRef<HTMLDivElement>(null);
+  const row2Ref = useRef<HTMLDivElement>(null);
+
+  // Estado para acordeão resumido no modelo Mobile
+  const [expandedMobileId, setExpandedMobileId] = useState<string | null>(null);
+
+  const toggleMobileExpand = (id: string) => {
+    setExpandedMobileId((prev) => (prev === id ? null : id));
+    setTimeout(() => {
+      ScrollTrigger.refresh();
+    }, 200);
+  };
 
   useGSAP(
     () => {
-      // 1. Cabeçalho da seção
+      // 1. Animação bidirecional do cabeçalho
       if (headerRef.current) {
         gsap.fromTo(
           headerRef.current,
@@ -31,37 +45,60 @@ export function PracticeAreas() {
             scrollTrigger: {
               trigger: headerRef.current,
               start: "top 85%",
-              once: true,
+              toggleActions: "play reverse play reverse",
             },
           }
         );
       }
 
-      // 2. Grid de 6 Áreas de Atuação em cascata fluida
-      if (gridRef.current) {
-        const cards = gridRef.current.querySelectorAll(".practice-card-item");
-        if (cards.length > 0) {
-          gsap.fromTo(
-            cards,
-            { opacity: 0, y: 40 },
+      // 2. DESKTOP: Efeito de Sobreposição das 3 áreas de baixo sobre as 3 de cima no Scroll
+      const mm = gsap.matchMedia();
+
+      mm.add("(min-width: 768px)", () => {
+        if (desktopContainerRef.current && row1Ref.current && row2Ref.current) {
+          const tl = gsap.timeline({
+            scrollTrigger: {
+              trigger: desktopContainerRef.current,
+              start: "top 45%",
+              end: "bottom 70%",
+              scrub: 1.2,
+            },
+          });
+
+          // A linha 1 encolhe sutilmente e ganha opacidade suave
+          tl.to(
+            row1Ref.current,
             {
-              opacity: 1,
+              scale: 0.94,
+              opacity: 0.35,
+              y: -20,
+              ease: "none",
+            },
+            0
+          );
+
+          // A linha 2 desliza para cima e sobrepõe a linha 1 com elevação física e sombra
+          tl.fromTo(
+            row2Ref.current,
+            {
               y: 0,
-              duration: 0.7,
-              stagger: 0.1,
-              ease: "power2.out",
-              scrollTrigger: {
-                trigger: gridRef.current,
-                start: "top 85%",
-                once: true,
-              },
-            }
+              opacity: 0.85,
+            },
+            {
+              y: -460, // Sobe cobrindo a primeira linha
+              opacity: 1,
+              ease: "none",
+            },
+            0
           );
         }
-      }
+      });
     },
     { scope: sectionRef }
   );
+
+  const topRowAreas = PRACTICE_AREAS.slice(0, 3);
+  const bottomRowAreas = PRACTICE_AREAS.slice(3, 6);
 
   return (
     <section
@@ -91,61 +128,208 @@ export function PracticeAreas() {
           </p>
         </div>
 
-        {/* Grid de 6 Áreas de Atuação */}
-        <div
-          ref={gridRef}
-          className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8"
-        >
-          {PRACTICE_AREAS.map((area) => (
-            <div
-              key={area.id}
-              className="practice-card-item h-full p-6 sm:p-8 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-subtle)]/35 shadow-xs hover:border-[#A6766A] hover:shadow-lg hover-lift transition-all duration-300 flex flex-col justify-between group will-change-transform"
-            >
-              <div>
-                <div className="flex items-center justify-between mb-4">
-                  <span className="font-heading text-2xl font-bold text-[#A6766A]">
-                    {area.code}.
+        {/* ========================================================================= */}
+        {/* MODELO DESKTOP (MD+): EFEITO DE SOBREPOSIÇÃO NO SCROLL                    */}
+        {/* ========================================================================= */}
+        <div ref={desktopContainerRef} className="hidden md:block relative pb-20">
+          {/* Linha 1 (Fica embaixo quando a linha 2 sobrepõe) */}
+          <div ref={row1Ref} className="relative z-10 grid md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 will-change-transform">
+            {topRowAreas.map((area) => (
+              <div
+                key={area.id}
+                className="h-full p-6 sm:p-8 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-subtle)]/35 shadow-md flex flex-col justify-between group transition-all duration-300"
+              >
+                <div>
+                  <div className="flex items-center justify-between mb-4">
+                    <span className="font-heading text-2xl font-bold text-[#A6766A]">
+                      {area.code}.
+                    </span>
+                    <div className="w-9 h-9 rounded-xl bg-[var(--bg-secondary)] flex items-center justify-center text-[#A6766A] group-hover:bg-[#A6766A] group-hover:text-white transition-colors duration-300 shadow-2xs">
+                      <Scale className="w-4 h-4" />
+                    </div>
+                  </div>
+
+                  <span className="font-heading text-xs uppercase tracking-wider text-[#A6766A] font-semibold block mb-1">
+                    {area.subtitle}
                   </span>
-                  <div className="w-9 h-9 rounded-xl bg-[var(--bg-secondary)] flex items-center justify-center text-[#A6766A] group-hover:bg-[#A6766A] group-hover:text-white transition-colors duration-300 shadow-2xs">
-                    <Scale className="w-4 h-4" />
+
+                  <h3 className="font-heading text-xl font-bold text-[var(--text-main)] mb-3 leading-snug">
+                    {area.title}
+                  </h3>
+
+                  <p className="font-body text-xs sm:text-sm text-[var(--text-muted)] leading-relaxed mb-6">
+                    {area.description}
+                  </p>
+
+                  <div className="space-y-2.5 pt-4 border-t border-[var(--border-subtle)]/20">
+                    {area.highlights.map((item, hIdx) => (
+                      <div key={hIdx} className="flex items-start gap-2.5 text-xs sm:text-sm font-body text-[var(--text-main)]">
+                        <CheckCircle2 className="w-3.5 h-3.5 text-[#A6766A] flex-shrink-0 mt-0.5" />
+                        <span>{item}</span>
+                      </div>
+                    ))}
                   </div>
                 </div>
 
-                <span className="font-heading text-xs uppercase tracking-wider text-[#A6766A] font-semibold block mb-1">
-                  {area.subtitle}
-                </span>
-
-                <h3 className="font-heading text-xl font-bold text-[var(--text-main)] mb-3 leading-snug">
-                  {area.title}
-                </h3>
-
-                <p className="font-body text-xs sm:text-sm text-[var(--text-muted)] leading-relaxed mb-6">
-                  {area.description}
-                </p>
-
-                <div className="space-y-2.5 pt-4 border-t border-[var(--border-subtle)]/20">
-                  {area.highlights.map((item, hIdx) => (
-                    <div key={hIdx} className="flex items-start gap-2.5 text-xs sm:text-sm font-body text-[var(--text-main)]">
-                      <CheckCircle2 className="w-3.5 h-3.5 text-[#A6766A] flex-shrink-0 mt-0.5" />
-                      <span>{item}</span>
-                    </div>
-                  ))}
+                <div className="pt-6 mt-6 border-t border-[var(--border-subtle)]/25 flex items-center justify-between">
+                  <a
+                    href={`https://wa.me/5517981217474?text=Ol%C3%A1%2C%20Dra.%20Sloane.%20Gostaria%20de%20informa%C3%A7%C3%B5es%20sobre%20${encodeURIComponent(area.title)}.`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 text-xs font-heading font-semibold text-[#A6766A] hover:text-[var(--text-main)] transition-colors group/link"
+                  >
+                    <span>Consultar sobre este tema</span>
+                    <ArrowUpRight className="w-3.5 h-3.5 transition-transform group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5" />
+                  </a>
                 </div>
               </div>
+            ))}
+          </div>
 
-              <div className="pt-6 mt-6 border-t border-[var(--border-subtle)]/25 flex items-center justify-between">
-                <a
-                  href={`https://wa.me/5517981217474?text=Ol%C3%A1%2C%20Dra.%20Sloane.%20Gostaria%20de%20informa%C3%A7%C3%B5es%20sobre%20${encodeURIComponent(area.title)}.`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 text-xs font-heading font-semibold text-[#A6766A] hover:text-[var(--text-main)] transition-colors group/link"
-                >
-                  <span>Consultar sobre este tema</span>
-                  <ArrowUpRight className="w-3.5 h-3.5 transition-transform group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5" />
-                </a>
+          {/* Espaçador entre linhas no desktop */}
+          <div className="h-8 lg:h-12" />
+
+          {/* Linha 2 (Desliza para cima sobrepondo a Linha 1 no scroll) */}
+          <div
+            ref={row2Ref}
+            className="relative z-20 grid md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 will-change-transform"
+          >
+            {bottomRowAreas.map((area) => (
+              <div
+                key={area.id}
+                className="h-full p-6 sm:p-8 rounded-2xl bg-[var(--bg-card)] border-2 border-[#D4A396]/60 shadow-2xl flex flex-col justify-between group transition-all duration-300"
+              >
+                <div>
+                  <div className="flex items-center justify-between mb-4">
+                    <span className="font-heading text-2xl font-bold text-[#A6766A]">
+                      {area.code}.
+                    </span>
+                    <div className="w-9 h-9 rounded-xl bg-[var(--bg-secondary)] flex items-center justify-center text-[#A6766A] group-hover:bg-[#A6766A] group-hover:text-white transition-colors duration-300 shadow-2xs">
+                      <Scale className="w-4 h-4" />
+                    </div>
+                  </div>
+
+                  <span className="font-heading text-xs uppercase tracking-wider text-[#A6766A] font-semibold block mb-1">
+                    {area.subtitle}
+                  </span>
+
+                  <h3 className="font-heading text-xl font-bold text-[var(--text-main)] mb-3 leading-snug">
+                    {area.title}
+                  </h3>
+
+                  <p className="font-body text-xs sm:text-sm text-[var(--text-muted)] leading-relaxed mb-6">
+                    {area.description}
+                  </p>
+
+                  <div className="space-y-2.5 pt-4 border-t border-[var(--border-subtle)]/20">
+                    {area.highlights.map((item, hIdx) => (
+                      <div key={hIdx} className="flex items-start gap-2.5 text-xs sm:text-sm font-body text-[var(--text-main)]">
+                        <CheckCircle2 className="w-3.5 h-3.5 text-[#A6766A] flex-shrink-0 mt-0.5" />
+                        <span>{item}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="pt-6 mt-6 border-t border-[var(--border-subtle)]/25 flex items-center justify-between">
+                  <a
+                    href={`https://wa.me/5517981217474?text=Ol%C3%A1%2C%20Dra.%20Sloane.%20Gostaria%20de%20informa%C3%A7%C3%B5es%20sobre%20${encodeURIComponent(area.title)}.`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 text-xs font-heading font-semibold text-[#A6766A] hover:text-[var(--text-main)] transition-colors group/link"
+                  >
+                    <span>Consultar sobre este tema</span>
+                    <ArrowUpRight className="w-3.5 h-3.5 transition-transform group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5" />
+                  </a>
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
+        </div>
+
+        {/* ========================================================================= */}
+        {/* MODELO MOBILE (< MD): FORMATO RESUMIDO (CABEM ATÉ 4 ÁREAS NA TELA)       */}
+        {/* ========================================================================= */}
+        <div className="block md:hidden space-y-3">
+          {PRACTICE_AREAS.map((area) => {
+            const isExpanded = expandedMobileId === area.id;
+
+            return (
+              <div
+                key={area.id}
+                className={`rounded-2xl border transition-all duration-300 bg-[var(--bg-card)] overflow-hidden ${
+                  isExpanded ? "border-[#A6766A] shadow-md" : "border-[var(--border-subtle)]/35 shadow-2xs"
+                }`}
+              >
+                {/* Cabeçalho Compacto do Card Resumido (Altura ~75px) */}
+                <div
+                  onClick={() => toggleMobileExpand(area.id)}
+                  className="p-3.5 flex items-center justify-between gap-3 cursor-pointer select-none"
+                >
+                  <div className="flex items-center gap-2.5 min-w-0">
+                    <span className="font-heading text-sm font-bold text-[#A6766A] flex-shrink-0">
+                      {area.code}
+                    </span>
+                    <div className="min-w-0">
+                      <h3 className="font-heading text-sm font-bold text-[var(--text-main)] truncate leading-tight">
+                        {area.title}
+                      </h3>
+                      <span className="text-[0.6875rem] font-heading text-[#A6766A] block truncate">
+                        {area.subtitle}
+                      </span>
+                    </div>
+                  </div>
+
+                  <button
+                    type="button"
+                    className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[0.6875rem] font-heading font-semibold transition-all flex-shrink-0 ${
+                      isExpanded
+                        ? "bg-[#A6766A] text-white"
+                        : "bg-[var(--bg-secondary)] text-[#A6766A] border border-[#A6766A]/30"
+                    }`}
+                    aria-expanded={isExpanded}
+                  >
+                    <span>{isExpanded ? "Fechar" : "Saber mais"}</span>
+                    <ChevronDown
+                      className={`w-3 h-3 transition-transform duration-300 ${
+                        isExpanded ? "rotate-180" : ""
+                      }`}
+                    />
+                  </button>
+                </div>
+
+                {/* Detalhes Expansíveis */}
+                {isExpanded && (
+                  <div className="px-4 pb-4 pt-1 border-t border-[var(--border-subtle)]/25 space-y-3 animate-fade-in-down">
+                    <p className="font-body text-xs text-[var(--text-muted)] leading-relaxed pt-2">
+                      {area.description}
+                    </p>
+
+                    <div className="space-y-2 pt-1">
+                      {area.highlights.map((item, hIdx) => (
+                        <div key={hIdx} className="flex items-start gap-2 text-xs font-body text-[var(--text-main)]">
+                          <CheckCircle2 className="w-3.5 h-3.5 text-[#A6766A] flex-shrink-0 mt-0.5" />
+                          <span>{item}</span>
+                        </div>
+                      ))}
+                    </div>
+
+                    <div className="pt-3 border-t border-[var(--border-subtle)]/20 flex justify-end">
+                      <a
+                        href={`https://wa.me/5517981217474?text=Ol%C3%A1%2C%20Dra.%20Sloane.%20Gostaria%20de%20informa%C3%A7%C3%B5es%20sobre%20${encodeURIComponent(area.title)}.`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="btn-pill bg-[#A6766A] hover:bg-[#8d5e53] text-white py-2 px-4 text-xs gap-1.5 inline-flex items-center"
+                      >
+                        <MessageSquare className="w-3.5 h-3.5" />
+                        <span>Consultar no WhatsApp</span>
+                      </a>
+                    </div>
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </div>
 
         {/* Banner Inferior de Suporte Geral */}

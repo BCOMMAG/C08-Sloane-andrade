@@ -32,7 +32,7 @@ export function ContactSection() {
             scrollTrigger: {
               trigger: headerRef.current,
               start: "top 85%",
-              once: true,
+              toggleActions: "play reverse play reverse",
             },
           }
         );
@@ -54,7 +54,7 @@ export function ContactSection() {
               scrollTrigger: {
                 trigger: cardsColRef.current,
                 start: "top 80%",
-                once: true,
+                toggleActions: "play reverse play reverse",
               },
             }
           );
@@ -74,7 +74,7 @@ export function ContactSection() {
             scrollTrigger: {
               trigger: mapColRef.current,
               start: "top 80%",
-              once: true,
+              toggleActions: "play reverse play reverse",
             },
           }
         );

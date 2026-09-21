@@ -3,7 +3,7 @@
 import { useState, useRef } from "react";
 import Image from "next/image";
 import { LAWYER_PROFILE, OFFICE_INFO } from "@/lib/data";
-import { GraduationCap, Compass, Eye, ShieldCheck, CheckCircle2, MessageSquare, ChevronDown, Sparkles } from "lucide-react";
+import { GraduationCap, Compass, Eye, ShieldCheck, MessageSquare, ChevronDown, Sparkles } from "lucide-react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
@@ -23,7 +23,7 @@ export function About() {
 
   useGSAP(
     () => {
-      // 1. Cabeçalho da Seção
+      // 1. Cabeçalho da Seção com animação bidirecional
       if (headerRef.current) {
         gsap.fromTo(
           headerRef.current,
@@ -36,7 +36,7 @@ export function About() {
             scrollTrigger: {
               trigger: headerRef.current,
               start: "top 85%",
-              once: true,
+              toggleActions: "play reverse play reverse",
             },
           }
         );
@@ -51,18 +51,18 @@ export function About() {
             opacity: 1,
             scale: 1,
             y: 0,
-            duration: 0.9,
+            duration: 0.85,
             ease: "power2.out",
             scrollTrigger: {
               trigger: photoCardRef.current,
               start: "top 85%",
-              once: true,
+              toggleActions: "play reverse play reverse",
             },
           }
         );
       }
 
-      // 3. Coluna de texto e biografia em cascata
+      // 3. Coluna de texto e biografia em cascata bidirecional
       if (textContentRef.current) {
         const textElements = textContentRef.current.querySelectorAll(".about-text-anim");
         if (textElements.length > 0) {
@@ -73,35 +73,35 @@ export function About() {
               opacity: 1,
               y: 0,
               duration: 0.7,
-              stagger: 0.12,
+              stagger: 0.1,
               ease: "power2.out",
               scrollTrigger: {
                 trigger: textContentRef.current,
                 start: "top 85%",
-                once: true,
+                toggleActions: "play reverse play reverse",
               },
             }
           );
         }
       }
 
-      // 4. Cards de Missão, Visão e Valores em escada
+      // 4. Princípios (Missão, Visão e Valores) estilo Pilares Institucionais
       if (cardsRef.current) {
-        const cards = cardsRef.current.querySelectorAll(".about-card-item");
-        if (cards.length > 0) {
+        const items = cardsRef.current.querySelectorAll(".about-pillar-item");
+        if (items.length > 0) {
           gsap.fromTo(
-            cards,
-            { y: 40, opacity: 0 },
+            items,
+            { y: 35, opacity: 0 },
             {
               y: 0,
               opacity: 1,
               duration: 0.75,
-              stagger: 0.15,
+              stagger: 0.14,
               ease: "power2.out",
               scrollTrigger: {
                 trigger: cardsRef.current,
-                start: "top 85%",
-                once: true,
+                start: "top 88%",
+                toggleActions: "play reverse play reverse",
               },
             }
           );
@@ -167,9 +167,9 @@ export function About() {
               </p>
             </div>
 
-            {/* Resumo da trajetória */}
+            {/* Resumo da trajetória — Trecho atualizado conforme solicitação do usuário */}
             <p className="about-text-anim font-body text-sm sm:text-base text-[var(--text-main)] leading-relaxed font-normal">
-              Com mais de 10 anos de prática forense consolidada em Guaíra/SP e comarcas paulistas, a Dra. Sloane Ferreira de Andrade conduz uma advocacia estratégica que prioriza o contato direto com a titular em todas as fases do processo. Cada caso é examinado sob medida para buscar a resposta mais rápida e segura, seja por via consensual extrajudicial ou contenciosa combativa.
+              Com mais de 10 anos de prática forense consolidada em Guaíra/SP e comarcas paulistas, a Dra. Sloane Ferreira de Andrade conduz uma advocacia estratégica que prioriza o contato direto com a titular em todas as fases do processo.
             </p>
 
             {/* Destaques Rápidos */}
@@ -291,64 +291,70 @@ export function About() {
           </div>
         </div>
 
-        {/* Bloco 2: Missão, Visão e Valores */}
-        <div ref={cardsRef} className="grid md:grid-cols-3 gap-6 pt-6 border-t border-[var(--border-subtle)]/25">
-          {/* Missão */}
-          <div className="about-card-item will-change-transform h-full p-6 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-subtle)]/35 shadow-xs flex flex-col justify-between hover-lift">
-            <div>
-              <div className="w-12 h-12 rounded-xl bg-[var(--bg-secondary)] flex items-center justify-center text-[#A6766A] mb-4">
-                <Compass className="w-6 h-6" />
-              </div>
-              <span className="font-heading text-xs uppercase tracking-wider text-[#A6766A] font-bold block mb-1">
-                Nossa Missão
+        {/* Bloco 2: Missão, Visão e Valores — EXATAMENTE IGUAL AOS PILARES INSTITUCIONAIS */}
+        <div className="pt-8 border-t border-[var(--border-subtle)]/30">
+          <div className="relative flex items-center justify-between pb-4 border-b border-[var(--border-subtle)]/25 mb-8 text-[var(--text-muted)]">
+            <div className="flex items-center gap-2.5">
+              <Compass className="w-4 h-4 text-[#A6766A]" />
+              <span className="font-heading uppercase text-xs tracking-widest font-bold text-[var(--text-main)]">
+                Diretrizes & Princípios Norteadores
               </span>
-              <h3 className="font-heading text-lg font-bold text-[var(--text-main)] mb-3">
+            </div>
+            <span className="font-heading text-xs tracking-wider text-[var(--text-muted)] hidden sm:inline">
+              Compromisso Ético & Excelência Técnica
+            </span>
+          </div>
+
+          <div
+            ref={cardsRef}
+            className="grid grid-cols-1 md:grid-cols-3 gap-8 divide-y md:divide-y-0 md:divide-x divide-[var(--border-subtle)]/30"
+          >
+            {/* 1. Nossa Missão */}
+            <div className="about-pillar-item flex flex-col items-start px-0 md:px-6 pt-6 md:pt-0 first:pt-0 first:pl-0 will-change-transform">
+              <div className="flex items-center gap-2 mb-2 text-[#A6766A]">
+                <Compass className="w-5 h-5 text-[#A6766A]" />
+                <span className="font-heading text-xl sm:text-2xl font-bold tracking-tight text-[var(--text-main)]">
+                  Nossa Missão
+                </span>
+              </div>
+              <h3 className="font-heading text-base font-semibold text-[var(--text-main)] mb-1.5">
                 Excelência Técnica & Empatia
               </h3>
               <p className="font-body text-xs sm:text-sm text-[var(--text-muted)] leading-relaxed">
                 {OFFICE_INFO.pillars.mission}
               </p>
             </div>
-          </div>
 
-          {/* Visão */}
-          <div className="about-card-item will-change-transform h-full p-6 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-subtle)]/35 shadow-xs flex flex-col justify-between hover-lift">
-            <div>
-              <div className="w-12 h-12 rounded-xl bg-[var(--bg-secondary)] flex items-center justify-center text-[#A6766A] mb-4">
-                <Eye className="w-6 h-6" />
+            {/* 2. Nossa Visão */}
+            <div className="about-pillar-item flex flex-col items-start px-0 md:px-6 pt-6 md:pt-0 first:pt-0 will-change-transform">
+              <div className="flex items-center gap-2 mb-2 text-[#A6766A]">
+                <Eye className="w-5 h-5 text-[#A6766A]" />
+                <span className="font-heading text-xl sm:text-2xl font-bold tracking-tight text-[var(--text-main)]">
+                  Nossa Visão
+                </span>
               </div>
-              <span className="font-heading text-xs uppercase tracking-wider text-[#A6766A] font-bold block mb-1">
-                Nossa Visão
-              </span>
-              <h3 className="font-heading text-lg font-bold text-[var(--text-main)] mb-3">
+              <h3 className="font-heading text-base font-semibold text-[var(--text-main)] mb-1.5">
                 Referência em Advocacia Personalizada
               </h3>
               <p className="font-body text-xs sm:text-sm text-[var(--text-muted)] leading-relaxed">
                 {OFFICE_INFO.pillars.vision}
               </p>
             </div>
-          </div>
 
-          {/* Valores */}
-          <div className="about-card-item will-change-transform h-full p-6 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-subtle)]/35 shadow-xs flex flex-col justify-between hover-lift">
-            <div>
-              <div className="w-12 h-12 rounded-xl bg-[var(--bg-secondary)] flex items-center justify-center text-[#A6766A] mb-4">
-                <ShieldCheck className="w-6 h-6" />
+            {/* 3. Nossos Valores */}
+            <div className="about-pillar-item flex flex-col items-start px-0 md:px-6 pt-6 md:pt-0 first:pt-0 will-change-transform">
+              <div className="flex items-center gap-2 mb-2 text-[#A6766A]">
+                <ShieldCheck className="w-5 h-5 text-[#A6766A]" />
+                <span className="font-heading text-xl sm:text-2xl font-bold tracking-tight text-[var(--text-main)]">
+                  Nossos Valores
+                </span>
               </div>
-              <span className="font-heading text-xs uppercase tracking-wider text-[#A6766A] font-bold block mb-1">
-                Nossos Valores
-              </span>
-              <h3 className="font-heading text-lg font-bold text-[var(--text-main)] mb-3">
+              <h3 className="font-heading text-base font-semibold text-[var(--text-main)] mb-1.5">
                 Compromissos Fundamentais
               </h3>
-              <ul className="space-y-2 text-xs sm:text-sm font-body text-[var(--text-muted)]">
-                {OFFICE_INFO.pillars.values.map((val, vIdx) => (
-                  <li key={vIdx} className="flex items-start gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-[#A6766A] flex-shrink-0 mt-0.5" />
-                    <span>{val}</span>
-                  </li>
-                ))}
-              </ul>
+              <p className="font-body text-xs sm:text-sm text-[var(--text-muted)] leading-relaxed">
+                {OFFICE_INFO.pillars.values.join(" • ")}
+              </p>
             </div>
           </div>
         </div>

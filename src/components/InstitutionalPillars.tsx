@@ -29,7 +29,7 @@ export function InstitutionalPillars() {
             scrollTrigger: {
               trigger: sectionRef.current,
               start: "top 90%",
-              once: true,
+              toggleActions: "play reverse play reverse",
             },
           }
         );
@@ -50,7 +50,7 @@ export function InstitutionalPillars() {
             scrollTrigger: {
               trigger: gridRef.current,
               start: "top 88%",
-              once: true,
+              toggleActions: "play reverse play reverse",
             },
           }
         );

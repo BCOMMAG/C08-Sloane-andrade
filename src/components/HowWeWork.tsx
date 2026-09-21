@@ -33,7 +33,7 @@ export function HowWeWork() {
             scrollTrigger: {
               trigger: headerRef.current,
               start: "top 85%",
-              once: true,
+              toggleActions: "play reverse play reverse",
             },
           }
         );
@@ -74,7 +74,7 @@ export function HowWeWork() {
               scrollTrigger: {
                 trigger: trackRef.current,
                 start: "top 80%",
-                once: true,
+                toggleActions: "play reverse play reverse",
               },
             }
           );
@@ -94,7 +94,7 @@ export function HowWeWork() {
             scrollTrigger: {
               trigger: ctaRef.current,
               start: "top 90%",
-              once: true,
+              toggleActions: "play reverse play reverse",
             },
           }
         );

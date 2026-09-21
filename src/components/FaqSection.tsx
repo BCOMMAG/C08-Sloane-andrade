@@ -3,6 +3,7 @@
 import { useState, useRef } from "react";
 import { FAQ_DATA, OFFICE_INFO } from "@/lib/data";
 import { ChevronDown, HelpCircle, MessageSquare } from "lucide-react";
+import { WhatsAppIcon } from "@/components/SocialIcons";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
@@ -15,6 +16,7 @@ export function FaqSection() {
   const sectionRef = useRef<HTMLElement>(null);
   const headerRef = useRef<HTMLDivElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
+  const bottomCardRef = useRef<HTMLDivElement>(null);
 
   const [activeTab, setActiveTab] = useState<string>("trabalhista");
   const [openItems, setOpenItems] = useState<Record<string, boolean>>({
@@ -25,7 +27,7 @@ export function FaqSection() {
 
   useGSAP(
     () => {
-      // 1. Cabeçalho
+      // 1. Cabeçalho com animação bidirecional
       if (headerRef.current) {
         gsap.fromTo(
           headerRef.current,
@@ -38,13 +40,13 @@ export function FaqSection() {
             scrollTrigger: {
               trigger: headerRef.current,
               start: "top 85%",
-              once: true,
+              toggleActions: "play reverse play reverse",
             },
           }
         );
       }
 
-      // 2. Acordeões em cascata
+      // 2. Acordeões em cascata bidirecional
       if (listRef.current) {
         const items = listRef.current.querySelectorAll(".faq-accordion-item");
         if (items.length > 0) {
@@ -60,11 +62,30 @@ export function FaqSection() {
               scrollTrigger: {
                 trigger: listRef.current,
                 start: "top 85%",
-                once: true,
+                toggleActions: "play reverse play reverse",
               },
             }
           );
         }
+      }
+
+      // 3. Card inferior
+      if (bottomCardRef.current) {
+        gsap.fromTo(
+          bottomCardRef.current,
+          { y: 25, opacity: 0 },
+          {
+            y: 0,
+            opacity: 1,
+            duration: 0.65,
+            ease: "power2.out",
+            scrollTrigger: {
+              trigger: bottomCardRef.current,
+              start: "top 90%",
+              toggleActions: "play reverse play reverse",
+            },
+          }
+        );
       }
     },
     { scope: sectionRef, dependencies: [activeTab] }
@@ -88,6 +109,16 @@ export function FaqSection() {
   };
 
   const currentCategory = FAQ_DATA.find((c) => c.id === activeTab) || FAQ_DATA[0];
+
+  const getSpecificQuestionUrl = (question: string) => {
+    const text = `Olá, Dra. Sloane! Estive lendo a dúvida "${question}" no seu site, mas ainda fiquei com dúvidas sobre a minha situação. Poderia me orientar?`;
+    return `https://wa.me/5517981217474?text=${encodeURIComponent(text)}`;
+  };
+
+  const getGeneralFaqUrl = () => {
+    const text = `Olá, Dra. Sloane! Consultei as Perguntas Frequentes no site, mas ainda fiquei com dúvidas sobre o meu caso. Poderia me ajudar?`;
+    return `https://wa.me/5517981217474?text=${encodeURIComponent(text)}`;
+  };
 
   return (
     <section
@@ -163,8 +194,24 @@ export function FaqSection() {
                 </button>
 
                 {isOpen && (
-                  <div className="px-5 pb-6 sm:px-6 sm:pb-6 text-xs sm:text-sm font-body text-[var(--text-muted)] leading-relaxed border-t border-[var(--border-subtle)]/20 pt-4">
-                    {item.answer}
+                  <div className="px-5 pb-6 sm:px-6 sm:pb-6 text-xs sm:text-sm font-body text-[var(--text-muted)] leading-relaxed border-t border-[var(--border-subtle)]/20 pt-4 space-y-4">
+                    <p>{item.answer}</p>
+
+                    {/* Botão Contextual por Pergunta (Item 8) */}
+                    <div className="pt-2 flex items-center justify-between border-t border-[var(--border-subtle)]/15">
+                      <span className="text-[0.6875rem] text-[var(--text-muted)]">
+                        Precisa de análise para o seu caso particular?
+                      </span>
+                      <a
+                        href={getSpecificQuestionUrl(item.question)}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 text-xs font-heading font-semibold text-[#A6766A] hover:text-[#8d5e53] transition-colors"
+                      >
+                        <WhatsAppIcon className="w-3.5 h-3.5 text-[#25D366]" />
+                        <span>Ainda fiquei com dúvidas</span>
+                      </a>
+                    </div>
                   </div>
                 )}
               </div>
@@ -172,22 +219,30 @@ export function FaqSection() {
           })}
         </div>
 
-        {/* Chamada para Dúvida Específica */}
-        <div className="mt-12 p-6 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-subtle)]/35 max-w-4xl flex flex-col sm:flex-row items-center justify-between gap-4">
+        {/* Card de Encerramento com Botão Principal "Ainda fiquei com dúvidas" (Item 8) */}
+        <div
+          ref={bottomCardRef}
+          className="mt-12 p-6 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-subtle)]/35 max-w-4xl flex flex-col sm:flex-row items-center justify-between gap-4 will-change-transform shadow-sm"
+        >
           <div className="flex items-center gap-3">
-            <HelpCircle className="w-5 h-5 text-[#A6766A] flex-shrink-0" />
-            <span className="text-xs sm:text-sm font-body text-[var(--text-main)]">
-              Sua dúvida não está listada acima? Converse diretamente com a Dra. Sloane Andrade.
-            </span>
+            <HelpCircle className="w-6 h-6 text-[#A6766A] flex-shrink-0" />
+            <div>
+              <h4 className="font-heading text-sm sm:text-base font-bold text-[var(--text-main)]">
+                Ainda fiquei com dúvidas?
+              </h4>
+              <p className="text-xs sm:text-sm font-body text-[var(--text-muted)]">
+                Converse diretamente com a Dra. Sloane Andrade para uma orientação jurídica individualizada.
+              </p>
+            </div>
           </div>
           <a
-            href={OFFICE_INFO.whatsappUrl}
+            href={getGeneralFaqUrl()}
             target="_blank"
             rel="noopener noreferrer"
-            className="btn-pill bg-white dark:bg-[#151A1F] text-[#1A1D20] dark:text-white border-2 border-[#A6766A] hover:bg-[#A6766A] hover:text-white dark:hover:bg-[#A6766A] dark:hover:text-white text-xs px-5 py-2.5 gap-2 whitespace-nowrap hover-lift transition-all"
+            className="btn-pill bg-[#25D366] hover:bg-[#20ba59] hover:scale-105 text-white text-xs sm:text-sm px-5 py-3 gap-2 whitespace-nowrap shadow-sm hover-lift transition-all flex items-center flex-shrink-0 cursor-pointer font-semibold"
           >
-            <MessageSquare className="w-3.5 h-3.5 text-[#A6766A]" />
-            <span>Tirar Dúvida</span>
+            <WhatsAppIcon className="w-4 h-4 text-white" />
+            <span>Ainda fiquei com dúvidas</span>
           </a>
         </div>
       </div>
