@@ -1,18 +1,71 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { OFFICE_INFO } from "@/lib/data";
 import { MessageSquare, ChevronRight, ShieldCheck, Award, MapPin } from "lucide-react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 export function Hero() {
+  const heroRef = useRef<HTMLElement>(null);
+  const bgRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (prefersReducedMotion) return;
+
+    gsap.registerPlugin(ScrollTrigger);
+
+    const ctx = gsap.context(() => {
+      if (!heroRef.current) return;
+
+      // Parallax suave no fundo (desce mais lentamente no scroll)
+      if (bgRef.current) {
+        gsap.to(bgRef.current, {
+          yPercent: 18,
+          scale: 1.05,
+          ease: "none",
+          scrollTrigger: {
+            trigger: heroRef.current,
+            start: "top top",
+            end: "bottom top",
+            scrub: 1,
+          },
+        });
+      }
+
+      // Esmaecimento e elevação suave do conteúdo textual ao sair da dobra
+      if (contentRef.current) {
+        gsap.to(contentRef.current, {
+          y: -45,
+          opacity: 0.15,
+          ease: "none",
+          scrollTrigger: {
+            trigger: heroRef.current,
+            start: "top top",
+            end: "bottom 30%",
+            scrub: 1,
+          },
+        });
+      }
+    }, heroRef);
+
+    return () => ctx.revert();
+  }, []);
+
   return (
     <section
       id="inicio"
+      ref={heroRef}
       className="relative min-h-[100dvh] w-full flex flex-col justify-between pt-24 pb-8 sm:pt-28 sm:pb-12 lg:pt-32 lg:pb-12 overflow-hidden editorial-border-b text-white"
     >
-      {/* Imagem de Fundo com troca Desktop / Mobile + Overlays Escuros de Alta Legibilidade */}
-      <div className="absolute inset-0 w-full h-full pointer-events-none z-0">
+      {/* Imagem de Fundo com Parallax e Overlays de Alta Legibilidade */}
+      <div ref={bgRef} className="absolute inset-0 w-full h-full pointer-events-none z-0 will-change-transform">
         
         {/* Mobile: header_mobile.jpeg */}
         <div className="relative w-full h-full block md:hidden">
@@ -45,7 +98,10 @@ export function Hero() {
         <div className="absolute -top-32 -right-32 w-96 h-96 bg-[#D4A396]/15 rounded-full blur-3xl md:hidden" />
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full flex-1 flex flex-col justify-between">
+      <div
+        ref={contentRef}
+        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full flex-1 flex flex-col justify-between will-change-transform"
+      >
         
         {/* Topo do Hero: Badge + Título Principal */}
         <div className="pt-2 sm:pt-4 lg:pt-4 max-w-3xl animate-fade-in-down">

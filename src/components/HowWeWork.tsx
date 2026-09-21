@@ -1,12 +1,78 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import { WORK_STEPS, OFFICE_INFO } from "@/lib/data";
-import { MessageSquare, ArrowRight } from "lucide-react";
+import { MessageSquare, ArrowRight, CheckCircle2 } from "lucide-react";
 import { RevealOnScroll } from "@/components/RevealOnScroll";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 export function HowWeWork() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const trackRef = useRef<HTMLDivElement>(null);
+  const progressBarRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (prefersReducedMotion) return;
+
+    gsap.registerPlugin(ScrollTrigger);
+
+    const ctx = gsap.context(() => {
+      if (!trackRef.current) return;
+
+      // Anima a barra de progresso da trilha conforme o usuário rola pela seção
+      if (progressBarRef.current) {
+        gsap.fromTo(
+          progressBarRef.current,
+          { scaleX: 0, transformOrigin: "left center" },
+          {
+            scaleX: 1,
+            ease: "none",
+            scrollTrigger: {
+              trigger: trackRef.current,
+              start: "top 75%",
+              end: "bottom 60%",
+              scrub: 0.8,
+            },
+          }
+        );
+      }
+
+      // Animação de entrada e ativação sequencial dos 4 passos
+      const stepItems = trackRef.current.querySelectorAll(".step-card-item");
+      if (stepItems.length > 0) {
+        gsap.fromTo(
+          stepItems,
+          { y: 40, opacity: 0, scale: 0.95 },
+          {
+            y: 0,
+            opacity: 1,
+            scale: 1,
+            duration: 0.75,
+            stagger: 0.16,
+            ease: "power2.out",
+            scrollTrigger: {
+              trigger: trackRef.current,
+              start: "top 80%",
+              toggleActions: "play none none reverse",
+            },
+          }
+        );
+      }
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
+
   return (
-    <section id="como-atuamos" className="py-16 sm:py-24 bg-[var(--bg-primary)] editorial-border-b w-full relative">
+    <section
+      id="como-atuamos"
+      ref={sectionRef}
+      className="py-16 sm:py-24 bg-[var(--bg-primary)] editorial-border-b w-full relative overflow-hidden"
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Cabeçalho */}
@@ -29,20 +95,33 @@ export function HowWeWork() {
           </div>
         </RevealOnScroll>
 
-        {/* 4 Passos Estruturados com entrada horizontal progressiva */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
-          {WORK_STEPS.map((step, idx) => (
-            <RevealOnScroll key={idx} delay={idx * 100} direction="zoom">
+        {/* Container com Trilha Conectora Progressiva */}
+        <div ref={trackRef} className="relative pt-6 pb-2">
+          {/* Linha guia de fundo (cinza sutil) */}
+          <div className="hidden lg:block absolute top-12 left-8 right-8 h-[2px] bg-[var(--border-subtle)]/25 -z-10" />
+          
+          {/* Linha de progresso Rose Gold conectora */}
+          <div
+            ref={progressBarRef}
+            className="hidden lg:block absolute top-12 left-8 right-8 h-[2px] bg-gradient-to-r from-[#A6766A] via-[#D4A396] to-[#8d5e53] -z-10 will-change-transform"
+          />
+
+          {/* 4 Passos Estruturados */}
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
+            {WORK_STEPS.map((step, idx) => (
               <div
-                className="h-full p-6 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-subtle)]/35 shadow-xs flex flex-col justify-between relative group hover:border-[#A6766A] hover-lift transition-all duration-300"
+                key={idx}
+                className="step-card-item h-full p-6 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-subtle)]/35 shadow-xs flex flex-col justify-between relative group hover:border-[#A6766A] hover:shadow-md hover-lift transition-all duration-300 will-change-transform"
               >
                 <div>
                   <div className="flex items-center justify-between mb-4">
-                    <span className="font-heading text-3xl font-bold text-[#A6766A]">
-                      {step.number}
-                    </span>
+                    <div className="w-11 h-11 rounded-xl bg-[var(--bg-secondary)] flex items-center justify-center border border-[#D4A396]/40 group-hover:bg-[#A6766A] group-hover:text-white transition-all duration-300 shadow-2xs">
+                      <span className="font-heading text-xl font-bold text-[#A6766A] group-hover:text-white transition-colors">
+                        {step.number}
+                      </span>
+                    </div>
                     {idx < WORK_STEPS.length - 1 && (
-                      <ArrowRight className="hidden lg:block w-4 h-4 text-[var(--border-subtle)]/60 group-hover:translate-x-1 transition-transform" />
+                      <ArrowRight className="hidden lg:block w-4 h-4 text-[var(--border-subtle)]/60 group-hover:translate-x-1 group-hover:text-[#A6766A] transition-all" />
                     )}
                   </div>
 
@@ -59,8 +138,8 @@ export function HowWeWork() {
                   </p>
                 </div>
               </div>
-            </RevealOnScroll>
-          ))}
+            ))}
+          </div>
         </div>
 
         <RevealOnScroll direction="up" delay={200}>

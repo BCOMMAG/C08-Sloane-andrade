@@ -1,12 +1,63 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import { PRACTICE_AREAS, OFFICE_INFO } from "@/lib/data";
 import { CheckCircle2, MessageSquare, ArrowUpRight, Scale } from "lucide-react";
 import { RevealOnScroll } from "@/components/RevealOnScroll";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 export function PracticeAreas() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const gridRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (prefersReducedMotion) return;
+
+    gsap.registerPlugin(ScrollTrigger);
+
+    const ctx = gsap.context(() => {
+      if (!gridRef.current) return;
+
+      const cards = gridRef.current.querySelectorAll(".practice-card-item");
+      if (cards.length > 0) {
+        gsap.fromTo(
+          cards,
+          {
+            opacity: 0,
+            y: 60,
+            rotationX: 14,
+            transformPerspective: 1000,
+          },
+          {
+            opacity: 1,
+            y: 0,
+            rotationX: 0,
+            duration: 0.9,
+            stagger: 0.12,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: gridRef.current,
+              start: "top 78%",
+              toggleActions: "play none none reverse",
+            },
+          }
+        );
+      }
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
+
   return (
-    <section id="atuacao" className="py-16 sm:py-24 bg-[var(--bg-secondary)]/40 editorial-border-b w-full relative">
+    <section
+      id="atuacao"
+      ref={sectionRef}
+      className="py-16 sm:py-24 bg-[var(--bg-secondary)]/40 editorial-border-b w-full relative"
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Cabeçalho */}
@@ -29,19 +80,22 @@ export function PracticeAreas() {
           </div>
         </RevealOnScroll>
 
-        {/* Grid de 6 Áreas de Atuação */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-          {PRACTICE_AREAS.map((area, idx) => (
-            <RevealOnScroll key={area.id} delay={idx * 75} direction="zoom">
-              <div
-                className="h-full p-6 sm:p-8 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-subtle)]/35 shadow-xs hover:border-[#A6766A] hover-lift transition-all duration-300 flex flex-col justify-between group"
-              >
+        {/* Grid de 6 Áreas de Atuação com Efeito 3D Cascade */}
+        <div
+          ref={gridRef}
+          className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8"
+        >
+          {PRACTICE_AREAS.map((area) => (
+            <div
+              key={area.id}
+              className="practice-card-item h-full p-6 sm:p-8 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-subtle)]/35 shadow-xs hover:border-[#A6766A] hover:shadow-lg hover-lift transition-all duration-300 flex flex-col justify-between group will-change-transform"
+            >
               <div>
                 <div className="flex items-center justify-between mb-4">
                   <span className="font-heading text-2xl font-bold text-[#A6766A]">
                     {area.code}.
                   </span>
-                  <div className="w-9 h-9 rounded-xl bg-[var(--bg-secondary)] flex items-center justify-center text-[#A6766A] group-hover:bg-[#A6766A] group-hover:text-white transition-colors duration-300">
+                  <div className="w-9 h-9 rounded-xl bg-[var(--bg-secondary)] flex items-center justify-center text-[#A6766A] group-hover:bg-[#A6766A] group-hover:text-white transition-colors duration-300 shadow-2xs">
                     <Scale className="w-4 h-4" />
                   </div>
                 </div>
@@ -80,7 +134,6 @@ export function PracticeAreas() {
                 </a>
               </div>
             </div>
-            </RevealOnScroll>
           ))}
         </div>
 

@@ -1,17 +1,57 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { FAQ_DATA, OFFICE_INFO } from "@/lib/data";
 import { ChevronDown, HelpCircle, MessageSquare } from "lucide-react";
 import { RevealOnScroll } from "@/components/RevealOnScroll";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 export function FaqSection() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const listRef = useRef<HTMLDivElement>(null);
+
   const [activeTab, setActiveTab] = useState<string>("trabalhista");
   const [openItems, setOpenItems] = useState<Record<string, boolean>>({
     "faq-t1": true,
     "faq-c1": true,
     "faq-p1": true,
   });
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (prefersReducedMotion) return;
+
+    gsap.registerPlugin(ScrollTrigger);
+
+    const ctx = gsap.context(() => {
+      if (!listRef.current) return;
+
+      const items = listRef.current.querySelectorAll(".faq-accordion-item");
+      if (items.length > 0) {
+        gsap.fromTo(
+          items,
+          { y: 30, opacity: 0 },
+          {
+            y: 0,
+            opacity: 1,
+            duration: 0.6,
+            stagger: 0.1,
+            ease: "power2.out",
+            scrollTrigger: {
+              trigger: listRef.current,
+              start: "top 82%",
+              toggleActions: "play none none reverse",
+            },
+          }
+        );
+      }
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, [activeTab]);
 
   const toggleItem = (id: string) => {
     setOpenItems((prev) => ({
@@ -23,7 +63,11 @@ export function FaqSection() {
   const currentCategory = FAQ_DATA.find((c) => c.id === activeTab) || FAQ_DATA[0];
 
   return (
-    <section id="faq" className="py-16 sm:py-24 bg-[var(--bg-secondary)]/30 editorial-border-b w-full relative">
+    <section
+      id="faq"
+      ref={sectionRef}
+      className="py-16 sm:py-24 bg-[var(--bg-secondary)]/30 editorial-border-b w-full relative"
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Cabeçalho */}
@@ -64,14 +108,14 @@ export function FaqSection() {
           ))}
         </div>
 
-        {/* Acordeão de Perguntas */}
-        <div className="max-w-4xl space-y-3.5">
+        {/* Acordeão de Perguntas com Revelação em Onda */}
+        <div ref={listRef} className="max-w-4xl space-y-3.5">
           {currentCategory.items.map((item) => {
             const isOpen = !!openItems[item.id];
             return (
               <div
                 key={item.id}
-                className="rounded-2xl bg-[var(--bg-card)] border border-[var(--border-subtle)]/35 overflow-hidden transition-all duration-200"
+                className="faq-accordion-item rounded-2xl bg-[var(--bg-card)] border border-[var(--border-subtle)]/35 overflow-hidden transition-all duration-200 will-change-transform shadow-2xs hover:border-[#A6766A]/60"
               >
                 <button
                   type="button"

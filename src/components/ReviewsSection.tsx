@@ -1,15 +1,52 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import { REVIEWS } from "@/lib/data";
 import { Star, MessageSquareQuote } from "lucide-react";
 import { RevealOnScroll } from "@/components/RevealOnScroll";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 export function ReviewsSection() {
-  // Duplicamos os reviews para efeito de marquee contínuo e suave
+  const marqueeRef = useRef<HTMLDivElement>(null);
+  const sectionRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (prefersReducedMotion) return;
+
+    gsap.registerPlugin(ScrollTrigger);
+
+    const ctx = gsap.context(() => {
+      if (!marqueeRef.current) return;
+
+      // Desloca sutilmente a faixa na direção do scroll aumentando a sensação de inércia física
+      gsap.to(marqueeRef.current, {
+        x: -120,
+        ease: "none",
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top bottom",
+          end: "bottom top",
+          scrub: 1.2,
+        },
+      });
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
+
+  // Duplicamos os reviews para efeito contínuo
   const duplicatedReviews = [...REVIEWS, ...REVIEWS];
 
   return (
-    <section id="avaliacoes" className="py-16 sm:py-24 bg-[var(--bg-secondary)]/50 editorial-border-b w-full relative overflow-hidden">
+    <section
+      id="avaliacoes"
+      ref={sectionRef}
+      className="py-16 sm:py-24 bg-[var(--bg-secondary)]/50 editorial-border-b w-full relative overflow-hidden"
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-12">
         
         {/* Cabeçalho */}
@@ -49,7 +86,7 @@ export function ReviewsSection() {
       </div>
 
       {/* Faixa Marquee de Cards Contínuos */}
-      <div className="w-full overflow-hidden py-4">
+      <div ref={marqueeRef} className="w-full overflow-hidden py-4 will-change-transform">
         <div className="animate-marquee gap-6">
           {duplicatedReviews.map((rev, idx) => (
             <div

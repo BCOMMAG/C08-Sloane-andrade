@@ -304,6 +304,8 @@ export function About() {
           <div className="container_outer_img lg:col-span-5 order-1 lg:order-2 w-full flex justify-center lg:justify-end overflow-hidden">
             <div ref={imgInnerRef} className="img-inner w-full max-w-[360px] sm:max-w-[400px] will-change-transform">
               <div className="container_img relative w-full aspect-[4/5] sm:aspect-[3/4] rounded-3xl overflow-hidden border-2 border-[#D4A396]/80 shadow-2xl hover-lift group bg-[#151A1F]">
+                {/* Feixe de luz suave que cruza o card */}
+                <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/20 to-transparent z-20 pointer-events-none" />
                 <Image
                   src={LAWYER_PROFILE.photo}
                   alt={LAWYER_PROFILE.name}
