@@ -133,11 +133,11 @@ export function Hero() {
             </a>
 
             <Link
-              href="#sobre"
-              className="btn-pill border border-white/30 bg-white/10 hover:bg-white/20 hover:scale-[1.02] backdrop-blur-sm text-white gap-2 py-3 sm:py-3.5 px-6 text-xs sm:text-sm font-semibold tracking-normal group transition-all text-center justify-center flex items-center"
+              href="#educativo"
+              className="btn-pill bg-white text-black border-2 border-[#A6766A] hover:bg-[#F4EAE6] hover:border-[#8d5e53] hover:scale-[1.02] shadow-md gap-2 py-3 sm:py-3.5 px-6 text-xs sm:text-sm font-semibold tracking-normal group transition-all text-center justify-center flex items-center cursor-pointer"
             >
-              <span>Conhecer o Escritório</span>
-              <ChevronRight className="w-4 h-4 text-[#D4A396] group-hover:translate-x-1 transition-transform" />
+              <span className="text-black font-semibold">Saber os meus Direitos</span>
+              <ChevronRight className="w-4 h-4 text-[#A6766A] group-hover:translate-x-1 transition-transform" />
             </Link>
           </div>
 

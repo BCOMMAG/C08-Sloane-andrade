@@ -237,19 +237,124 @@ export default function LinksPage() {
 
       {/* ===================== VERSÃO MOBILE (Bio Instagram Otimizada) ===================== */}
       <div className="lg:hidden relative flex flex-col justify-between min-h-[100dvh] w-full px-5 py-6 overflow-y-auto bg-[#FFFFFF]">
-        <div className="relative z-10 flex flex-col items-center text-center pt-8 pb-3">
-          <div className="relative w-[80vw] max-w-[320px] h-20 mb-3">
+        {/* Fundo Geométrico: Linhas e Formas em Sobreposição na Cor Primária (#A6766A / #D4A396) */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
+          <svg
+            className="absolute inset-0 w-full h-full opacity-70"
+            xmlns="http://www.w3.org/2000/svg"
+            preserveAspectRatio="none"
+          >
+            <defs>
+              <linearGradient id="mobileLineGradPrimary" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="#D4A396" stopOpacity="0.1" />
+                <stop offset="35%" stopColor="#A6766A" stopOpacity="0.55" />
+                <stop offset="70%" stopColor="#8d5e53" stopOpacity="0.4" />
+                <stop offset="100%" stopColor="#D4A396" stopOpacity="0.1" />
+              </linearGradient>
+
+              <linearGradient id="mobileLineGradCross" x1="100%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stopColor="#A6766A" stopOpacity="0.1" />
+                <stop offset="45%" stopColor="#A6766A" stopOpacity="0.6" />
+                <stop offset="85%" stopColor="#D4A396" stopOpacity="0.25" />
+                <stop offset="100%" stopColor="#A6766A" stopOpacity="0.05" />
+              </linearGradient>
+
+              <pattern id="mobileFineGrid" width="40" height="40" patternUnits="userSpaceOnUse">
+                <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#D4A396" strokeWidth="0.5" strokeOpacity="0.2" />
+              </pattern>
+            </defs>
+
+            {/* Grid sutil de precisão ao fundo */}
+            <rect width="100%" height="100%" fill="url(#mobileFineGrid)" />
+
+            {/* Linhas principais diagonais se sobrepondo e passando pela tela */}
+            <line x1="-15%" y1="8%" x2="115%" y2="48%" stroke="url(#mobileLineGradPrimary)" strokeWidth="1.75" />
+            <line x1="-15%" y1="12%" x2="115%" y2="52%" stroke="url(#mobileLineGradPrimary)" strokeWidth="0.75" strokeDasharray="6 4" strokeOpacity="0.6" />
+
+            {/* Linhas cruzando em ângulo oposto (sobreposição) */}
+            <line x1="115%" y1="6%" x2="-15%" y2="44%" stroke="url(#mobileLineGradCross)" strokeWidth="1.75" />
+            <line x1="115%" y1="10%" x2="-15%" y2="48%" stroke="url(#mobileLineGradCross)" strokeWidth="0.75" strokeDasharray="4 4" strokeOpacity="0.5" />
+
+            {/* Linhas centrais transpassando o bloco */}
+            <line x1="-20%" y1="58%" x2="120%" y2="82%" stroke="url(#mobileLineGradPrimary)" strokeWidth="1.5" />
+            <line x1="120%" y1="52%" x2="-20%" y2="88%" stroke="url(#mobileLineGradCross)" strokeWidth="1.5" />
+
+            {/* Linhas transversais de sustentação */}
+            <line x1="25%" y1="0%" x2="85%" y2="100%" stroke="url(#mobileLineGradPrimary)" strokeWidth="1.25" strokeOpacity="0.45" />
+            <line x1="75%" y1="0%" x2="15%" y2="100%" stroke="url(#mobileLineGradCross)" strokeWidth="1.25" strokeOpacity="0.45" />
+
+            {/* Formas Geométricas: Losangos decorativos atrás da logo */}
+            <rect
+              x="50%"
+              y="18%"
+              width="90"
+              height="90"
+              transform="translate(-45, -45) rotate(45)"
+              fill="#A6766A"
+              fillOpacity="0.04"
+              stroke="#A6766A"
+              strokeWidth="1"
+              strokeOpacity="0.4"
+            />
+            <rect
+              x="50%"
+              y="18%"
+              width="130"
+              height="130"
+              transform="translate(-65, -65) rotate(45)"
+              fill="none"
+              stroke="#D4A396"
+              strokeWidth="0.75"
+              strokeOpacity="0.25"
+              strokeDasharray="4 4"
+            />
+
+            {/* Formas geométricas poligonais sobrepostas */}
+            <polygon
+              points="-10,240 120,300 40,420"
+              fill="#A6766A"
+              fillOpacity="0.03"
+              stroke="#A6766A"
+              strokeWidth="1"
+              strokeOpacity="0.3"
+            />
+            <polygon
+              points="420,480 290,560 380,680"
+              fill="#D4A396"
+              fillOpacity="0.03"
+              stroke="#D4A396"
+              strokeWidth="1"
+              strokeOpacity="0.3"
+            />
+
+            {/* Pontos de Interseção / Nós Geométricos */}
+            <circle cx="50%" cy="26%" r="3.5" fill="#A6766A" fillOpacity="0.7" />
+            <circle cx="50%" cy="26%" r="8" stroke="#A6766A" strokeWidth="0.75" strokeOpacity="0.4" fill="none" />
+
+            <circle cx="28%" cy="66%" r="3" fill="#A6766A" fillOpacity="0.6" />
+            <circle cx="72%" cy="74%" r="3" fill="#D4A396" fillOpacity="0.6" />
+          </svg>
+
+          {/* Suaves halos de luz na cor primária para profundidade */}
+          <div className="absolute top-12 left-1/2 -translate-x-1/2 w-80 h-80 bg-[#D4A396]/15 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute bottom-16 right-0 w-72 h-72 bg-[#A6766A]/10 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute top-1/2 -left-16 w-56 h-56 bg-[#A6766A]/10 rounded-full blur-2xl pointer-events-none" />
+        </div>
+
+        {/* Cabeçalho Mobile com a Logo com o dobro do tamanho no mesmo local */}
+        <div className="relative z-10 flex flex-col items-center text-center pt-5 pb-2">
+          <div className="relative w-[92vw] max-w-[380px] h-36 sm:h-40 mb-3">
             <Image
               src="/logo_semfundo_escritapreta_paramodoclaro.png"
               alt="Sloane Andrade Advocacia"
               fill
               priority
-              className="object-contain object-center"
-              sizes="320px"
+              className="object-contain object-center drop-shadow-xs"
+              sizes="(max-width: 768px) 380px, 320px"
             />
           </div>
 
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-[#D4A396]/40 bg-[#F4EAE6] text-[0.6875rem] font-heading text-[#A6766A] font-bold">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-[#D4A396]/50 bg-[#F4EAE6]/90 backdrop-blur-xs text-[0.6875rem] font-heading text-[#A6766A] font-bold shadow-2xs">
             <ShieldCheck className="w-3.5 h-3.5 text-[#A6766A]" />
             <span>{LAWYER_PROFILE.name} • {OFFICE_INFO.oab}</span>
           </div>
@@ -259,10 +364,10 @@ export default function LinksPage() {
           {quickLinks.map((item) => {
             const Icon = item.icon;
             const isInternal = item.href.startsWith("/");
-            const buttonClasses = `w-full py-2.5 px-3.5 rounded-xl flex items-center justify-between group transition-all duration-300 border ${
+            const buttonClasses = `w-full py-2.5 px-3.5 rounded-xl flex items-center justify-between group transition-all duration-300 border backdrop-blur-xs ${
               item.highlight
-                ? "bg-[#A6766A] text-white border-[#A6766A] shadow-sm"
-                : "bg-white text-[#1A1D20] border-[#D4A396]/40 shadow-2xs"
+                ? "bg-[#A6766A] text-white border-[#A6766A] shadow-sm hover:bg-[#8d5e53]"
+                : "bg-white/95 text-[#1A1D20] border-[#D4A396]/45 shadow-2xs hover:border-[#A6766A]"
             }`;
 
             const content = (
@@ -315,7 +420,7 @@ export default function LinksPage() {
         </div>
 
         <div className="relative z-10 text-center space-y-1.5 pt-3 border-t border-gray-100">
-          <div className="w-full max-w-xs mx-auto py-1 px-2 rounded-lg bg-[#F4EAE6]/70 border border-[#D4A396]/20">
+          <div className="w-full max-w-xs mx-auto py-1 px-2 rounded-lg bg-[#F4EAE6]/80 backdrop-blur-xs border border-[#D4A396]/30">
             <span className="font-body text-[0.625rem] text-gray-700 block truncate">
               Trabalhista • Acidentário • Divórcio • Inventário • Cível
             </span>
