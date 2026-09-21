@@ -58,6 +58,7 @@ export const OFFICE_INFO = {
   cityState: "Guaíra - SP",
   phone: "(17) 98121-7474",
   whatsappUrl: "https://wa.me/5517981217474?text=Ol%C3%A1%2C%20Dra.%20Sloane.%20Gostaria%20de%20uma%20orienta%C3%A7%C3%A3o%20jur%C3%ADdica.",
+  mapsDirectionsUrl: "https://www.google.com/maps/dir/?api=1&destination=R.+14+B,+1077+-+Joaquim+Pereira+Lelis,+Gua%C3%ADra+-+SP,+14790-000",
   email: "sloaneandradeadv@gmail.com",
   experienceYears: "+10",
   workingHours: {

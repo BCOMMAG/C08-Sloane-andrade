@@ -2,7 +2,7 @@
 
 import { useRef } from "react";
 import { OFFICE_INFO } from "@/lib/data";
-import { MapPin, Phone, Mail, Clock, MessageSquare } from "lucide-react";
+import { MapPin, Phone, Mail, Clock, MessageSquare, Navigation, ArrowUpRight } from "lucide-react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
@@ -137,12 +137,12 @@ export function ContactSection() {
                 </div>
               </div>
 
-              {/* Card Endereço */}
+              {/* Card Endereço com Botão de Rota Traçada */}
               <div className="contact-info-card p-5 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-subtle)]/35 flex items-start gap-4 will-change-transform shadow-2xs hover:border-[#A6766A] transition-colors">
                 <div className="w-10 h-10 rounded-xl bg-[var(--bg-secondary)] text-[#A6766A] flex items-center justify-center flex-shrink-0 shadow-xs">
                   <MapPin className="w-5 h-5" />
                 </div>
-                <div>
+                <div className="flex-1 min-w-0">
                   <span className="font-heading text-xs uppercase tracking-wider text-[#A6766A] font-bold block mb-0.5">
                     Endereço da Sede
                   </span>
@@ -152,6 +152,18 @@ export function ContactSection() {
                   <p className="text-xs font-body text-[var(--text-muted)] mt-1">
                     Guaíra - São Paulo • CEP 14790-000
                   </p>
+                  <div className="mt-3 pt-2.5 border-t border-[var(--border-subtle)]/25">
+                    <a
+                      href={OFFICE_INFO.mapsDirectionsUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 text-xs font-heading font-bold text-[#A6766A] hover:text-[#8d5e53] transition-colors group/route"
+                    >
+                      <Navigation className="w-3.5 h-3.5 transition-transform group-hover/route:rotate-12 text-[#A6766A]" />
+                      <span>Traçar rota no GPS</span>
+                      <ArrowUpRight className="w-3.5 h-3.5 transition-transform group-hover/route:translate-x-0.5 group-hover/route:-translate-y-0.5" />
+                    </a>
+                  </div>
                 </div>
               </div>
 
@@ -202,7 +214,7 @@ export function ContactSection() {
             </div>
           </div>
 
-          {/* Coluna 2: Mapa Interativo do Google */}
+          {/* Coluna 2: Mapa Interativo do Google com Botão Flutuante de Rota */}
           <div ref={mapColRef} className="lg:col-span-7 flex flex-col justify-between will-change-transform">
             <div className="relative w-full h-[380px] sm:h-[480px] lg:h-full min-h-[380px] rounded-2xl overflow-hidden border border-[var(--border-subtle)]/40 shadow-xs">
               <iframe
@@ -216,6 +228,7 @@ export function ContactSection() {
                 referrerPolicy="no-referrer-when-downgrade"
                 className="w-full h-full grayscale-[25%] contrast-[1.05]"
               />
+              {/* Badge de Identificação no Topo do Mapa */}
               <div className="absolute top-4 left-4 p-3 rounded-xl bg-white/95 dark:bg-[#151A1F]/95 backdrop-blur-md border border-[var(--border-subtle)]/30 text-xs shadow-md">
                 <span className="font-heading font-bold text-[var(--text-main)] block">
                   Sloane Andrade Advocacia
@@ -223,6 +236,27 @@ export function ContactSection() {
                 <span className="text-[var(--text-muted)] font-body">
                   R. 14 B, 01077 - Guaíra/SP
                 </span>
+              </div>
+
+              {/* Botão de Rota Traçada Flutuante na Base do Mapa */}
+              <div className="absolute bottom-4 inset-x-4 sm:left-auto sm:right-4 p-2 sm:p-2.5 rounded-2xl bg-white/95 dark:bg-[#151A1F]/95 backdrop-blur-md border border-[var(--border-subtle)]/40 shadow-xl flex items-center justify-between sm:justify-start gap-3">
+                <div className="hidden sm:block pl-2 pr-1">
+                  <span className="font-heading text-xs font-bold text-[var(--text-main)] block">
+                    Como Chegar
+                  </span>
+                  <span className="text-[0.6875rem] text-[var(--text-muted)] font-body block">
+                    Guaíra/SP e região
+                  </span>
+                </div>
+                <a
+                  href={OFFICE_INFO.mapsDirectionsUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn-pill bg-[#A6766A] hover:bg-[#8d5e53] hover:scale-105 text-white py-2.5 px-4 text-xs font-semibold gap-2 shadow-md inline-flex items-center justify-center w-full sm:w-auto transition-all cursor-pointer"
+                >
+                  <Navigation className="w-3.5 h-3.5 fill-white text-white" />
+                  <span>Traçar Rota no Google Maps</span>
+                </a>
               </div>
             </div>
           </div>

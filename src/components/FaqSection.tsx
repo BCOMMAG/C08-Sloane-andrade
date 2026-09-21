@@ -116,7 +116,7 @@ export function FaqSection() {
   };
 
   const getGeneralFaqUrl = () => {
-    const text = `Olá, Dra. Sloane! Consultei as Perguntas Frequentes no site, mas ainda fiquei com dúvidas sobre o meu caso. Poderia me ajudar?`;
+    const text = `Olá, Dra. Sloane! Minha dúvida não está listada nas perguntas frequentes do site. Gostaria de uma orientação jurídica para o meu caso.`;
     return `https://wa.me/5517981217474?text=${encodeURIComponent(text)}`;
   };
 
@@ -197,7 +197,7 @@ export function FaqSection() {
                   <div className="px-5 pb-6 sm:px-6 sm:pb-6 text-xs sm:text-sm font-body text-[var(--text-muted)] leading-relaxed border-t border-[var(--border-subtle)]/20 pt-4 space-y-4">
                     <p>{item.answer}</p>
 
-                    {/* Botão Contextual por Pergunta (Item 8) */}
+                    {/* Botão Contextual por Pergunta */}
                     <div className="pt-2 flex items-center justify-between border-t border-[var(--border-subtle)]/15">
                       <span className="text-[0.6875rem] text-[var(--text-muted)]">
                         Precisa de análise para o seu caso particular?
@@ -209,7 +209,7 @@ export function FaqSection() {
                         className="inline-flex items-center gap-1.5 text-xs font-heading font-semibold text-[#A6766A] hover:text-[#8d5e53] transition-colors"
                       >
                         <WhatsAppIcon className="w-3.5 h-3.5 text-[#25D366]" />
-                        <span>Ainda fiquei com dúvidas</span>
+                        <span>Tirar dúvida sobre este ponto</span>
                       </a>
                     </div>
                   </div>
@@ -219,7 +219,7 @@ export function FaqSection() {
           })}
         </div>
 
-        {/* Card de Encerramento com Botão Principal "Ainda fiquei com dúvidas" (Item 8) */}
+        {/* Card de Encerramento com Botão Principal "Sua dúvida não está aqui?" */}
         <div
           ref={bottomCardRef}
           className="mt-12 p-6 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-subtle)]/35 max-w-4xl flex flex-col sm:flex-row items-center justify-between gap-4 will-change-transform shadow-sm"
@@ -228,7 +228,7 @@ export function FaqSection() {
             <HelpCircle className="w-6 h-6 text-[#A6766A] flex-shrink-0" />
             <div>
               <h4 className="font-heading text-sm sm:text-base font-bold text-[var(--text-main)]">
-                Ainda fiquei com dúvidas?
+                Sua dúvida não está aqui?
               </h4>
               <p className="text-xs sm:text-sm font-body text-[var(--text-muted)]">
                 Converse diretamente com a Dra. Sloane Andrade para uma orientação jurídica individualizada.
@@ -242,7 +242,7 @@ export function FaqSection() {
             className="btn-pill bg-[#25D366] hover:bg-[#20ba59] hover:scale-105 text-white text-xs sm:text-sm px-5 py-3 gap-2 whitespace-nowrap shadow-sm hover-lift transition-all flex items-center flex-shrink-0 cursor-pointer font-semibold"
           >
             <WhatsAppIcon className="w-4 h-4 text-white" />
-            <span>Ainda fiquei com dúvidas</span>
+            <span>Falar com a Advogada</span>
           </a>
         </div>
       </div>

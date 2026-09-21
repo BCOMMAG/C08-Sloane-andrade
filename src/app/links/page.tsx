@@ -42,9 +42,9 @@ export default function LinksPage() {
     },
     {
       id: "maps",
-      title: "Localização da Sede (Google Maps)",
+      title: "Como Chegar / Rota no GPS (Google Maps)",
       subtitle: "R. 14 B, 01077 - Joaquim Pereira Lelis, Guaíra/SP",
-      href: "https://maps.google.com/?q=R.+14+B,+01077+-+Joaquim+Pereira+Lelis,+Gua%C3%ADra+-+SP",
+      href: OFFICE_INFO.mapsDirectionsUrl,
       icon: MapPin,
       highlight: false,
     },
