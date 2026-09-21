@@ -1,55 +1,67 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import { PRACTICE_AREAS, OFFICE_INFO } from "@/lib/data";
 import { CheckCircle2, MessageSquare, ArrowUpRight, Scale } from "lucide-react";
-import { RevealOnScroll } from "@/components/RevealOnScroll";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useGSAP } from "@gsap/react";
+
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(ScrollTrigger, useGSAP);
+}
 
 export function PracticeAreas() {
   const sectionRef = useRef<HTMLElement>(null);
+  const headerRef = useRef<HTMLDivElement>(null);
   const gridRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-
-    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (prefersReducedMotion) return;
-
-    gsap.registerPlugin(ScrollTrigger);
-
-    const ctx = gsap.context(() => {
-      if (!gridRef.current) return;
-
-      const cards = gridRef.current.querySelectorAll(".practice-card-item");
-      if (cards.length > 0) {
+  useGSAP(
+    () => {
+      // 1. Cabeçalho da seção
+      if (headerRef.current) {
         gsap.fromTo(
-          cards,
+          headerRef.current,
+          { y: 30, opacity: 0 },
           {
-            opacity: 0,
-            y: 45,
-            scale: 0.96,
-          },
-          {
-            opacity: 1,
             y: 0,
-            scale: 1,
+            opacity: 1,
             duration: 0.7,
-            stagger: 0.1,
             ease: "power2.out",
             scrollTrigger: {
-              trigger: gridRef.current,
-              start: "top 88%",
-              toggleActions: "play none none reverse",
+              trigger: headerRef.current,
+              start: "top 85%",
+              once: true,
             },
           }
         );
       }
-    }, sectionRef);
 
-    return () => ctx.revert();
-  }, []);
+      // 2. Grid de 6 Áreas de Atuação em cascata fluida
+      if (gridRef.current) {
+        const cards = gridRef.current.querySelectorAll(".practice-card-item");
+        if (cards.length > 0) {
+          gsap.fromTo(
+            cards,
+            { opacity: 0, y: 40 },
+            {
+              opacity: 1,
+              y: 0,
+              duration: 0.7,
+              stagger: 0.1,
+              ease: "power2.out",
+              scrollTrigger: {
+                trigger: gridRef.current,
+                start: "top 85%",
+                once: true,
+              },
+            }
+          );
+        }
+      }
+    },
+    { scope: sectionRef }
+  );
 
   return (
     <section
@@ -58,28 +70,28 @@ export function PracticeAreas() {
       className="py-16 sm:py-24 bg-[var(--bg-secondary)]/40 editorial-border-b w-full relative"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
         {/* Cabeçalho */}
-        <RevealOnScroll direction="up">
-          <div className="flex flex-col md:flex-row md:items-end justify-between pb-8 border-b border-[var(--border-subtle)]/30 gap-6 mb-12 sm:mb-16">
-            <div>
-              <div className="flex items-center gap-3 mb-2">
-                <span className="bullet-indicator text-[#A6766A]" />
-                <span className="font-heading uppercase text-xs tracking-widest text-[#A6766A] font-bold">
-                  02 / Especialidades Jurídicas
-                </span>
-              </div>
-              <h2 className="font-heading text-3xl sm:text-4xl lg:text-5xl text-[var(--text-main)] font-semibold">
-                Áreas de Atuação
-              </h2>
+        <div
+          ref={headerRef}
+          className="flex flex-col md:flex-row md:items-end justify-between pb-8 border-b border-[var(--border-subtle)]/30 gap-6 mb-12 sm:mb-16 will-change-transform"
+        >
+          <div>
+            <div className="flex items-center gap-3 mb-2">
+              <span className="bullet-indicator text-[#A6766A]" />
+              <span className="font-heading uppercase text-xs tracking-widest text-[#A6766A] font-bold">
+                02 / Especialidades Jurídicas
+              </span>
             </div>
-            <p className="font-body text-sm sm:text-base text-[var(--text-muted)] max-w-xl leading-relaxed">
-              Abordagem técnica individualizada e focada nas soluções mais seguras para o seu trabalho, sua família e seus contratos.
-            </p>
+            <h2 className="font-heading text-3xl sm:text-4xl lg:text-5xl text-[var(--text-main)] font-semibold">
+              Áreas de Atuação
+            </h2>
           </div>
-        </RevealOnScroll>
+          <p className="font-body text-sm sm:text-base text-[var(--text-muted)] max-w-xl leading-relaxed">
+            Abordagem técnica individualizada e focada nas soluções mais seguras para o seu trabalho, sua família e seus contratos.
+          </p>
+        </div>
 
-        {/* Grid de 6 Áreas de Atuação com Efeito 3D Cascade */}
+        {/* Grid de 6 Áreas de Atuação */}
         <div
           ref={gridRef}
           className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8"
@@ -156,7 +168,6 @@ export function PracticeAreas() {
             <span>Falar com a Advogada</span>
           </a>
         </div>
-
       </div>
     </section>
   );

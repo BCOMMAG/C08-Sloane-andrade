@@ -21,14 +21,6 @@ export function RevealOnScroll({
     const el = ref.current;
     if (!el) return;
 
-    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (prefersReducedMotion) {
-      el.style.opacity = "1";
-      el.style.transform = "none";
-      el.style.filter = "none";
-      return;
-    }
-
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -68,10 +60,8 @@ export function RevealOnScroll({
       case "zoom":
         return "scale(0.92)";
       case "slide-left":
-        // Fade in da direita para a esquerda: começa 44px à direita
         return "translate3d(44px, 0, 0)";
       case "slide-right":
-        // Fade in da esquerda para a direita: começa 44px à esquerda
         return "translate3d(-44px, 0, 0)";
       case "none":
       default:

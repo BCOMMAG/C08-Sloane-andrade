@@ -22,10 +22,10 @@ export function ScrollProgressBar() {
   return (
     <div
       aria-hidden="true"
-      className="hidden md:block fixed top-0 left-0 right-0 h-[3px] z-[100] pointer-events-none bg-transparent"
+      className="fixed top-0 left-0 right-0 h-[3.5px] z-[100] pointer-events-none bg-black/10 dark:bg-white/5"
     >
       <div
-        className="h-full bg-gradient-to-r from-[#D4A396] via-[#A6766A] to-[#D4A396] origin-left transition-transform duration-75 ease-out shadow-[0_0_8px_rgba(212,163,150,0.6)]"
+        className="h-full bg-gradient-to-r from-[#A6766A] via-[#D4A396] to-[#A6766A] origin-left transition-transform duration-75 ease-out shadow-[0_0_12px_rgba(212,163,150,0.9)]"
         style={{ transform: `scaleX(${scrollProgress})` }}
       />
     </div>

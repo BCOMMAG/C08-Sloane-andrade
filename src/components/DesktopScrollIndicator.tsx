@@ -57,7 +57,7 @@ export function DesktopScrollIndicator() {
   return (
     <nav
       aria-label="Indicador de navegação por seções"
-      className="hidden xl:flex fixed right-6 top-1/2 -translate-y-1/2 z-40 flex-col items-end gap-3.5 pointer-events-none"
+      className="hidden lg:flex fixed right-6 top-1/2 -translate-y-1/2 z-40 flex-col items-end gap-3.5 pointer-events-none"
     >
       <div className="relative flex flex-col items-end gap-3 py-3 px-2 rounded-full bg-black/25 dark:bg-black/40 backdrop-blur-md border border-[var(--border-subtle)]/30 shadow-lg pointer-events-auto">
         {/* Linha guia vertical */}

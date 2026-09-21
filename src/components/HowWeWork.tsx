@@ -1,30 +1,46 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import { WORK_STEPS, OFFICE_INFO } from "@/lib/data";
-import { MessageSquare, ArrowRight, CheckCircle2 } from "lucide-react";
-import { RevealOnScroll } from "@/components/RevealOnScroll";
+import { MessageSquare, ArrowRight } from "lucide-react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useGSAP } from "@gsap/react";
+
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(ScrollTrigger, useGSAP);
+}
 
 export function HowWeWork() {
   const sectionRef = useRef<HTMLElement>(null);
+  const headerRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   const progressBarRef = useRef<HTMLDivElement>(null);
+  const ctaRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    if (typeof window === "undefined") return;
+  useGSAP(
+    () => {
+      // 1. Cabeçalho
+      if (headerRef.current) {
+        gsap.fromTo(
+          headerRef.current,
+          { y: 30, opacity: 0 },
+          {
+            y: 0,
+            opacity: 1,
+            duration: 0.7,
+            ease: "power2.out",
+            scrollTrigger: {
+              trigger: headerRef.current,
+              start: "top 85%",
+              once: true,
+            },
+          }
+        );
+      }
 
-    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (prefersReducedMotion) return;
-
-    gsap.registerPlugin(ScrollTrigger);
-
-    const ctx = gsap.context(() => {
-      if (!trackRef.current) return;
-
-      // Anima a barra de progresso da trilha conforme o usuário rola pela seção
-      if (progressBarRef.current) {
+      // 2. Barra de progresso da trilha desenhada com scrub
+      if (progressBarRef.current && trackRef.current) {
         gsap.fromTo(
           progressBarRef.current,
           { scaleX: 0, transformOrigin: "left center" },
@@ -41,31 +57,51 @@ export function HowWeWork() {
         );
       }
 
-      // Animação de entrada e ativação sequencial dos 4 passos
-      const stepItems = trackRef.current.querySelectorAll(".step-card-item");
-      if (stepItems.length > 0) {
+      // 3. Revelação dos 4 passos em cascata
+      if (trackRef.current) {
+        const stepItems = trackRef.current.querySelectorAll(".step-card-item");
+        if (stepItems.length > 0) {
+          gsap.fromTo(
+            stepItems,
+            { y: 40, opacity: 0, scale: 0.95 },
+            {
+              y: 0,
+              opacity: 1,
+              scale: 1,
+              duration: 0.75,
+              stagger: 0.14,
+              ease: "power2.out",
+              scrollTrigger: {
+                trigger: trackRef.current,
+                start: "top 80%",
+                once: true,
+              },
+            }
+          );
+        }
+      }
+
+      // 4. CTA inferior
+      if (ctaRef.current) {
         gsap.fromTo(
-          stepItems,
-          { y: 40, opacity: 0, scale: 0.95 },
+          ctaRef.current,
+          { y: 25, opacity: 0 },
           {
             y: 0,
             opacity: 1,
-            scale: 1,
-            duration: 0.75,
-            stagger: 0.16,
+            duration: 0.6,
             ease: "power2.out",
             scrollTrigger: {
-              trigger: trackRef.current,
-              start: "top 80%",
-              toggleActions: "play none none reverse",
+              trigger: ctaRef.current,
+              start: "top 90%",
+              once: true,
             },
           }
         );
       }
-    }, sectionRef);
-
-    return () => ctx.revert();
-  }, []);
+    },
+    { scope: sectionRef }
+  );
 
   return (
     <section
@@ -74,32 +110,32 @@ export function HowWeWork() {
       className="py-16 sm:py-24 bg-[var(--bg-primary)] editorial-border-b w-full relative overflow-hidden"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
         {/* Cabeçalho */}
-        <RevealOnScroll direction="up">
-          <div className="flex flex-col md:flex-row md:items-end justify-between pb-8 border-b border-[var(--border-subtle)]/30 gap-6 mb-12 sm:mb-16">
-            <div>
-              <div className="flex items-center gap-3 mb-2">
-                <span className="bullet-indicator text-[#A6766A]" />
-                <span className="font-heading uppercase text-xs tracking-widest text-[#A6766A] font-bold">
-                  05 / Clareza Procedimental
-                </span>
-              </div>
-              <h2 className="font-heading text-3xl sm:text-4xl lg:text-5xl text-[var(--text-main)] font-semibold">
-                Como Funciona Nosso Atendimento
-              </h2>
+        <div
+          ref={headerRef}
+          className="flex flex-col md:flex-row md:items-end justify-between pb-8 border-b border-[var(--border-subtle)]/30 gap-6 mb-12 sm:mb-16 will-change-transform"
+        >
+          <div>
+            <div className="flex items-center gap-3 mb-2">
+              <span className="bullet-indicator text-[#A6766A]" />
+              <span className="font-heading uppercase text-xs tracking-widest text-[#A6766A] font-bold">
+                05 / Clareza Procedimental
+              </span>
             </div>
-            <p className="font-body text-sm sm:text-base text-[var(--text-muted)] max-w-xl leading-relaxed">
-              Uma trajetória transparente, sem juridiquês inacessível e com total previsibilidade sobre cada fase do seu procedimento.
-            </p>
+            <h2 className="font-heading text-3xl sm:text-4xl lg:text-5xl text-[var(--text-main)] font-semibold">
+              Como Funciona Nosso Atendimento
+            </h2>
           </div>
-        </RevealOnScroll>
+          <p className="font-body text-sm sm:text-base text-[var(--text-muted)] max-w-xl leading-relaxed">
+            Uma trajetória transparente, sem juridiquês inacessível e com total previsibilidade sobre cada fase do seu procedimento.
+          </p>
+        </div>
 
         {/* Container com Trilha Conectora Progressiva */}
         <div ref={trackRef} className="relative pt-6 pb-2">
           {/* Linha guia de fundo (cinza sutil) */}
           <div className="hidden lg:block absolute top-12 left-8 right-8 h-[2px] bg-[var(--border-subtle)]/25 -z-10" />
-          
+
           {/* Linha de progresso Rose Gold conectora */}
           <div
             ref={progressBarRef}
@@ -142,20 +178,17 @@ export function HowWeWork() {
           </div>
         </div>
 
-        <RevealOnScroll direction="up" delay={200}>
-          <div className="mt-12 text-center">
-            <a
-              href={OFFICE_INFO.whatsappUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn-pill bg-[#A6766A] hover:bg-[#8d5e53] text-white gap-2 shadow-xs text-sm inline-flex items-center"
-            >
-              <MessageSquare className="w-4 h-4 fill-white" />
-              <span>Iniciar Primeiro Contato via WhatsApp</span>
-            </a>
-          </div>
-        </RevealOnScroll>
-
+        <div ref={ctaRef} className="mt-12 text-center will-change-transform">
+          <a
+            href={OFFICE_INFO.whatsappUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn-pill bg-[#A6766A] hover:bg-[#8d5e53] text-white gap-2 shadow-xs text-sm inline-flex items-center"
+          >
+            <MessageSquare className="w-4 h-4 fill-white" />
+            <span>Iniciar Primeiro Contato via WhatsApp</span>
+          </a>
+        </div>
       </div>
     </section>
   );

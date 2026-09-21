@@ -1,44 +1,59 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import { REVIEWS } from "@/lib/data";
 import { Star, MessageSquareQuote } from "lucide-react";
-import { RevealOnScroll } from "@/components/RevealOnScroll";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useGSAP } from "@gsap/react";
+
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(ScrollTrigger, useGSAP);
+}
 
 export function ReviewsSection() {
   const marqueeRef = useRef<HTMLDivElement>(null);
   const sectionRef = useRef<HTMLElement>(null);
+  const headerRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    if (typeof window === "undefined") return;
+  useGSAP(
+    () => {
+      // 1. Cabeçalho e Badge de Avaliações
+      if (headerRef.current) {
+        gsap.fromTo(
+          headerRef.current,
+          { y: 30, opacity: 0 },
+          {
+            y: 0,
+            opacity: 1,
+            duration: 0.7,
+            ease: "power2.out",
+            scrollTrigger: {
+              trigger: headerRef.current,
+              start: "top 85%",
+              once: true,
+            },
+          }
+        );
+      }
 
-    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (prefersReducedMotion) return;
+      // 2. Parallax de scroll na esteira contínua
+      if (marqueeRef.current) {
+        gsap.to(marqueeRef.current, {
+          x: -140,
+          ease: "none",
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top bottom",
+            end: "bottom top",
+            scrub: 1,
+          },
+        });
+      }
+    },
+    { scope: sectionRef }
+  );
 
-    gsap.registerPlugin(ScrollTrigger);
-
-    const ctx = gsap.context(() => {
-      if (!marqueeRef.current) return;
-
-      // Desloca sutilmente a faixa na direção do scroll aumentando a sensação de inércia física
-      gsap.to(marqueeRef.current, {
-        x: -120,
-        ease: "none",
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top bottom",
-          end: "bottom top",
-          scrub: 1.2,
-        },
-      });
-    }, sectionRef);
-
-    return () => ctx.revert();
-  }, []);
-
-  // Duplicamos os reviews para efeito contínuo
   const duplicatedReviews = [...REVIEWS, ...REVIEWS];
 
   return (
@@ -48,41 +63,40 @@ export function ReviewsSection() {
       className="py-16 sm:py-24 bg-[var(--bg-secondary)]/50 editorial-border-b w-full relative overflow-hidden"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-12">
-        
         {/* Cabeçalho */}
-        <RevealOnScroll direction="up">
-          <div className="flex flex-col md:flex-row md:items-end justify-between pb-8 border-b border-[var(--border-subtle)]/30 gap-6">
-            <div>
-              <div className="flex items-center gap-3 mb-2">
-                <span className="bullet-indicator text-[#A6766A]" />
-                <span className="font-heading uppercase text-xs tracking-widest text-[#A6766A] font-bold">
-                  04 / Reconhecimento Público
-                </span>
-              </div>
-              <h2 className="font-heading text-3xl sm:text-4xl lg:text-5xl text-[var(--text-main)] font-semibold">
-                Avaliações no Google Reviews
-              </h2>
+        <div
+          ref={headerRef}
+          className="flex flex-col md:flex-row md:items-end justify-between pb-8 border-b border-[var(--border-subtle)]/30 gap-6 will-change-transform"
+        >
+          <div>
+            <div className="flex items-center gap-3 mb-2">
+              <span className="bullet-indicator text-[#A6766A]" />
+              <span className="font-heading uppercase text-xs tracking-widest text-[#A6766A] font-bold">
+                04 / Reconhecimento Público
+              </span>
             </div>
-            
-            <div className="flex items-center gap-4 p-4 rounded-xl bg-[var(--bg-card)] border border-[var(--border-subtle)]/30 shadow-2xs">
-              <div className="text-right">
-                <div className="flex items-center gap-1 text-amber-400">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="w-4 h-4 fill-amber-400" />
-                  ))}
-                </div>
-                <span className="font-heading text-xs uppercase tracking-wider text-[var(--text-muted)] block mt-0.5">
-                  Avaliação 5.0 Estrelas
-                </span>
+            <h2 className="font-heading text-3xl sm:text-4xl lg:text-5xl text-[var(--text-main)] font-semibold">
+              Avaliações no Google Reviews
+            </h2>
+          </div>
+
+          <div className="flex items-center gap-4 p-4 rounded-xl bg-[var(--bg-card)] border border-[var(--border-subtle)]/30 shadow-2xs">
+            <div className="text-right">
+              <div className="flex items-center gap-1 text-amber-400">
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} className="w-4 h-4 fill-amber-400" />
+                ))}
               </div>
-              <div className="h-8 w-[1px] bg-[var(--border-subtle)]/30" />
-              <div className="font-heading text-xl font-bold text-[var(--text-main)]">
-                +70 <span className="text-xs text-[var(--text-muted)] font-normal">opiniões públicas</span>
-              </div>
+              <span className="font-heading text-xs uppercase tracking-wider text-[var(--text-muted)] block mt-0.5">
+                Avaliação 5.0 Estrelas
+              </span>
+            </div>
+            <div className="h-8 w-[1px] bg-[var(--border-subtle)]/30" />
+            <div className="font-heading text-xl font-bold text-[var(--text-main)]">
+              +70 <span className="text-xs text-[var(--text-muted)] font-normal">opiniões públicas</span>
             </div>
           </div>
-        </RevealOnScroll>
-
+        </div>
       </div>
 
       {/* Faixa Marquee de Cards Contínuos */}

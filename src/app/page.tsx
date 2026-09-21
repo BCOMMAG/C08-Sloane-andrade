@@ -19,7 +19,7 @@ export default function Home() {
       <ScrollProgressBar />
       <Navbar />
       <DesktopScrollIndicator />
-      <main className="flex-1">
+      <main className="flex-1 overflow-x-hidden">
         <Hero />
         <InstitutionalPillars />
         <About />

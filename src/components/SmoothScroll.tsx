@@ -9,14 +9,11 @@ export function SmoothScroll({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (typeof window === "undefined") return;
 
-    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (prefersReducedMotion) return;
-
     gsap.registerPlugin(ScrollTrigger);
 
-    // Inicialização do Lenis com parâmetros fluidos
+    // Inicialização do Lenis com parâmetros de suavização fluida
     const lenis = new Lenis({
-      duration: 1.2,
+      duration: 1.15,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       orientation: "vertical",
       gestureOrientation: "vertical",
@@ -25,25 +22,29 @@ export function SmoothScroll({ children }: { children: ReactNode }) {
       touchMultiplier: 1.5,
     });
 
-    // Sincronização obrigatória entre Lenis e GSAP ScrollTrigger
+    // Sincronização em tempo real entre Lenis e ScrollTrigger
     lenis.on("scroll", () => {
       ScrollTrigger.update();
     });
 
-    const updateTicker = (time: number) => {
-      lenis.raf(time * 1000);
-    };
+    let rafId: number;
+    function raf(time: number) {
+      lenis.raf(time);
+      rafId = requestAnimationFrame(raf);
+    }
 
-    gsap.ticker.add(updateTicker);
+    rafId = requestAnimationFrame(raf);
 
-    // Recalcula triggers após montagem inicial
-    const timeout = setTimeout(() => {
-      ScrollTrigger.refresh();
-    }, 250);
+    // Múltiplos recálculos para garantir sincronização perfeita mesmo após carregamento de imagens/fontes
+    const t1 = setTimeout(() => ScrollTrigger.refresh(), 150);
+    const t2 = setTimeout(() => ScrollTrigger.refresh(), 600);
+    const t3 = setTimeout(() => ScrollTrigger.refresh(), 1500);
 
     return () => {
-      clearTimeout(timeout);
-      gsap.ticker.remove(updateTicker);
+      clearTimeout(t1);
+      clearTimeout(t2);
+      clearTimeout(t3);
+      cancelAnimationFrame(rafId);
       lenis.destroy();
     };
   }, []);

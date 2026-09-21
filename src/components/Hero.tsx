@@ -1,34 +1,30 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { OFFICE_INFO } from "@/lib/data";
 import { MessageSquare, ChevronRight, ShieldCheck, Award, MapPin } from "lucide-react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useGSAP } from "@gsap/react";
+
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(ScrollTrigger, useGSAP);
+}
 
 export function Hero() {
   const heroRef = useRef<HTMLElement>(null);
   const bgRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-
-    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (prefersReducedMotion) return;
-
-    gsap.registerPlugin(ScrollTrigger);
-
-    const ctx = gsap.context(() => {
-      if (!heroRef.current) return;
-
-      // Parallax suave no fundo (desce mais lentamente no scroll)
+  useGSAP(
+    () => {
+      // Parallax dinâmico no fundo que acompanha a rolagem
       if (bgRef.current) {
         gsap.to(bgRef.current, {
-          yPercent: 18,
-          scale: 1.05,
+          yPercent: 25,
+          scale: 1.08,
           ease: "none",
           scrollTrigger: {
             trigger: heroRef.current,
@@ -39,10 +35,10 @@ export function Hero() {
         });
       }
 
-      // Esmaecimento e elevação suave do conteúdo textual ao sair da dobra
+      // Elevação e fade suave do texto ao sair da primeira dobra
       if (contentRef.current) {
         gsap.to(contentRef.current, {
-          y: -45,
+          y: -50,
           opacity: 0.15,
           ease: "none",
           scrollTrigger: {
@@ -53,10 +49,9 @@ export function Hero() {
           },
         });
       }
-    }, heroRef);
-
-    return () => ctx.revert();
-  }, []);
+    },
+    { scope: heroRef }
+  );
 
   return (
     <section
@@ -66,7 +61,6 @@ export function Hero() {
     >
       {/* Imagem de Fundo com Parallax e Overlays de Alta Legibilidade */}
       <div ref={bgRef} className="absolute inset-0 w-full h-full pointer-events-none z-0 will-change-transform">
-        
         {/* Mobile: header_mobile.jpeg */}
         <div className="relative w-full h-full block md:hidden">
           <Image
@@ -92,7 +86,7 @@ export function Hero() {
           />
         </div>
 
-        {/* Gradientes e Overlays: no mobile, mantém contraste escuro total; no desktop, mantém a imagem 100% nítida, iluminada e sem blur */}
+        {/* Gradientes e Overlays */}
         <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/75 to-black/55 md:from-black/80 md:via-black/30 md:via-50% md:to-transparent" />
         <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-transparent to-black/65 md:from-black/30 md:via-transparent md:to-transparent" />
         <div className="absolute -top-32 -right-32 w-96 h-96 bg-[#D4A396]/15 rounded-full blur-3xl md:hidden" />
@@ -102,10 +96,8 @@ export function Hero() {
         ref={contentRef}
         className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full flex-1 flex flex-col justify-between will-change-transform"
       >
-        
         {/* Topo do Hero: Badge + Título Principal */}
         <div className="pt-2 sm:pt-4 lg:pt-4 max-w-3xl animate-fade-in-down">
-          
           {/* Badge de Autoridade */}
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-[#D4A396]/50 bg-black/40 backdrop-blur-md text-xs sm:text-sm font-heading tracking-wide text-[#D4A396] mb-5 shadow-sm">
             <ShieldCheck className="w-4 h-4 text-[#D4A396]" />
@@ -124,7 +116,6 @@ export function Hero() {
 
         {/* Base do Hero: Subtítulo + Botões de Conversão + Destaques de Rodapé */}
         <div className="pb-2 sm:pb-4 lg:pb-4 max-w-3xl mt-6 sm:mt-8 lg:mt-auto animate-fade-in-up">
-          
           <p className="font-body text-xs sm:text-base lg:text-lg text-gray-200 max-w-2xl leading-relaxed mb-6 font-normal drop-shadow-sm">
             Advocacia personalizada e humanizada com mais de 10 anos de experiência prática em Direito do Trabalho, Previdenciário/Acidentário, Família e Cível. Atendimento direto e dedicado com a titular em Guaíra/SP e região.
           </p>
@@ -169,9 +160,7 @@ export function Hero() {
               </span>
             </div>
           </div>
-
         </div>
-
       </div>
     </section>
   );

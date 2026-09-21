@@ -1,14 +1,19 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef } from "react";
 import { FAQ_DATA, OFFICE_INFO } from "@/lib/data";
 import { ChevronDown, HelpCircle, MessageSquare } from "lucide-react";
-import { RevealOnScroll } from "@/components/RevealOnScroll";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useGSAP } from "@gsap/react";
+
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(ScrollTrigger, useGSAP);
+}
 
 export function FaqSection() {
   const sectionRef = useRef<HTMLElement>(null);
+  const headerRef = useRef<HTMLDivElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
 
   const [activeTab, setActiveTab] = useState<string>("trabalhista");
@@ -18,46 +23,68 @@ export function FaqSection() {
     "faq-p1": true,
   });
 
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-
-    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (prefersReducedMotion) return;
-
-    gsap.registerPlugin(ScrollTrigger);
-
-    const ctx = gsap.context(() => {
-      if (!listRef.current) return;
-
-      const items = listRef.current.querySelectorAll(".faq-accordion-item");
-      if (items.length > 0) {
+  useGSAP(
+    () => {
+      // 1. Cabeçalho
+      if (headerRef.current) {
         gsap.fromTo(
-          items,
+          headerRef.current,
           { y: 30, opacity: 0 },
           {
             y: 0,
             opacity: 1,
-            duration: 0.6,
-            stagger: 0.1,
+            duration: 0.7,
             ease: "power2.out",
             scrollTrigger: {
-              trigger: listRef.current,
-              start: "top 82%",
-              toggleActions: "play none none reverse",
+              trigger: headerRef.current,
+              start: "top 85%",
+              once: true,
             },
           }
         );
       }
-    }, sectionRef);
 
-    return () => ctx.revert();
-  }, [activeTab]);
+      // 2. Acordeões em cascata
+      if (listRef.current) {
+        const items = listRef.current.querySelectorAll(".faq-accordion-item");
+        if (items.length > 0) {
+          gsap.fromTo(
+            items,
+            { y: 30, opacity: 0 },
+            {
+              y: 0,
+              opacity: 1,
+              duration: 0.6,
+              stagger: 0.08,
+              ease: "power2.out",
+              scrollTrigger: {
+                trigger: listRef.current,
+                start: "top 85%",
+                once: true,
+              },
+            }
+          );
+        }
+      }
+    },
+    { scope: sectionRef, dependencies: [activeTab] }
+  );
 
   const toggleItem = (id: string) => {
     setOpenItems((prev) => ({
       ...prev,
       [id]: !prev[id],
     }));
+    setTimeout(() => {
+      ScrollTrigger.refresh();
+    }, 200);
+  };
+
+  const handleTabChange = (catId: string) => {
+    setActiveTab(catId);
+    setTimeout(() => {
+      ScrollTrigger.refresh();
+    }, 200);
   };
 
   const currentCategory = FAQ_DATA.find((c) => c.id === activeTab) || FAQ_DATA[0];
@@ -69,26 +96,26 @@ export function FaqSection() {
       className="py-16 sm:py-24 bg-[var(--bg-secondary)]/30 editorial-border-b w-full relative"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
         {/* Cabeçalho */}
-        <RevealOnScroll direction="up">
-          <div className="flex flex-col md:flex-row md:items-end justify-between pb-8 border-b border-[var(--border-subtle)]/30 gap-6 mb-12 sm:mb-16">
-            <div>
-              <div className="flex items-center gap-3 mb-2">
-                <span className="bullet-indicator text-[#A6766A]" />
-                <span className="font-heading uppercase text-xs tracking-widest text-[#A6766A] font-bold">
-                  06 / Dúvidas Frequentes
-                </span>
-              </div>
-              <h2 className="font-heading text-3xl sm:text-4xl lg:text-5xl text-[var(--text-main)] font-semibold">
-                Perguntas e Respostas
-              </h2>
+        <div
+          ref={headerRef}
+          className="flex flex-col md:flex-row md:items-end justify-between pb-8 border-b border-[var(--border-subtle)]/30 gap-6 mb-12 sm:mb-16 will-change-transform"
+        >
+          <div>
+            <div className="flex items-center gap-3 mb-2">
+              <span className="bullet-indicator text-[#A6766A]" />
+              <span className="font-heading uppercase text-xs tracking-widest text-[#A6766A] font-bold">
+                06 / Dúvidas Frequentes
+              </span>
             </div>
-            <p className="font-body text-sm sm:text-base text-[var(--text-muted)] max-w-xl leading-relaxed">
-              Respostas diretas e esclarecedoras para as principais questões que recebemos diariamente no escritório.
-            </p>
+            <h2 className="font-heading text-3xl sm:text-4xl lg:text-5xl text-[var(--text-main)] font-semibold">
+              Perguntas e Respostas
+            </h2>
           </div>
-        </RevealOnScroll>
+          <p className="font-body text-sm sm:text-base text-[var(--text-muted)] max-w-xl leading-relaxed">
+            Respostas diretas e esclarecedoras para as principais questões que recebemos diariamente no escritório.
+          </p>
+        </div>
 
         {/* Abas de Categorias */}
         <div className="flex flex-wrap gap-2.5 mb-8 pb-4 border-b border-[var(--border-subtle)]/25">
@@ -96,7 +123,7 @@ export function FaqSection() {
             <button
               key={cat.id}
               type="button"
-              onClick={() => setActiveTab(cat.id)}
+              onClick={() => handleTabChange(cat.id)}
               className={`px-4 sm:px-5 py-2.5 rounded-full text-xs sm:text-sm font-heading font-semibold transition-all cursor-pointer ${
                 activeTab === cat.id
                   ? "bg-[#A6766A] text-white shadow-xs"
@@ -108,7 +135,7 @@ export function FaqSection() {
           ))}
         </div>
 
-        {/* Acordeão de Perguntas com Revelação em Onda */}
+        {/* Acordeão de Perguntas */}
         <div ref={listRef} className="max-w-4xl space-y-3.5">
           {currentCategory.items.map((item) => {
             const isOpen = !!openItems[item.id];
@@ -163,7 +190,6 @@ export function FaqSection() {
             <span>Tirar Dúvida</span>
           </a>
         </div>
-
       </div>
     </section>
   );

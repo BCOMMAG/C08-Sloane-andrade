@@ -1,57 +1,23 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import { OFFICE_INFO } from "@/lib/data";
+import { useRef } from "react";
 import { Award, UserCheck, Scale, ShieldCheck } from "lucide-react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useGSAP } from "@gsap/react";
+
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(ScrollTrigger, useGSAP);
+}
 
 export function InstitutionalPillars() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const gridRef = useRef<HTMLDivElement>(null);
-
-  const pillars = [
-    {
-      icon: Award,
-      metric: "+10 Anos",
-      title: "Solidez & Prática Forense",
-      desc: "Trajetória consolidada desde 2014, com sólida passagem pela Polícia Civil e atuação contínua em comarcas da região.",
-    },
-    {
-      icon: UserCheck,
-      metric: "100% Pessoal",
-      title: "Atendimento com a Titular",
-      desc: "Você não conversa com estagiários ou intermediários. Toda a estratégia é desenhada diretamente pela Dra. Sloane Andrade.",
-    },
-    {
-      icon: Scale,
-      metric: "Personalizado",
-      title: "Estratégia Sob Medida",
-      desc: "Análise aprofundada da realidade do cliente para buscar a solução mais célere, seja via acordo extrajudicial ou via judicial.",
-    },
-    {
-      icon: ShieldCheck,
-      metric: "5.0 ★",
-      title: "Confiança Comprovada",
-      desc: "Nota máxima e reconhecimento de clientes no Google Reviews pela clareza, empatia e dedicação com os mínimos detalhes.",
-    },
-  ];
-
   const lineRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-
-    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (prefersReducedMotion) return;
-
-    gsap.registerPlugin(ScrollTrigger);
-
-    const ctx = gsap.context(() => {
-      const triggerEl = gridRef.current || sectionRef.current;
-      if (!triggerEl) return;
-
-      // Linha conectora superior que se desenha com o scroll
+  useGSAP(
+    () => {
+      // Linha conectora Rose Gold superior que se desenha ao entrar na tela
       if (lineRef.current) {
         gsap.fromTo(
           lineRef.current,
@@ -63,34 +29,34 @@ export function InstitutionalPillars() {
             scrollTrigger: {
               trigger: sectionRef.current,
               start: "top 90%",
-              toggleActions: "play none none reverse",
+              once: true,
             },
           }
         );
       }
 
-      const pillarItems = triggerEl.querySelectorAll(".pillar-item");
-      if (pillarItems.length > 0) {
-        // Revelação em cascata com fade-up
+      // Revelação em cascata dos 4 pilares institucionais
+      const pillarItems = gridRef.current?.querySelectorAll(".pillar-item");
+      if (pillarItems && pillarItems.length > 0) {
         gsap.fromTo(
           pillarItems,
-          { y: 35, opacity: 0 },
+          { y: 40, opacity: 0 },
           {
             y: 0,
             opacity: 1,
-            duration: 0.7,
+            duration: 0.75,
             stagger: 0.12,
             ease: "power2.out",
             scrollTrigger: {
-              trigger: triggerEl,
+              trigger: gridRef.current,
               start: "top 88%",
-              toggleActions: "play none none reverse",
+              once: true,
             },
           }
         );
 
-        // Contador e animação de números/métricas
-        const counters = triggerEl.querySelectorAll(".metric-counter");
+        // Contador numérico dinâmico ativado pelo scroll
+        const counters = gridRef.current ? gridRef.current.querySelectorAll(".metric-counter") : [];
         counters.forEach((el) => {
           const targetValue = parseFloat(el.getAttribute("data-target") || "0");
           const prefix = el.getAttribute("data-prefix") || "";
@@ -100,12 +66,12 @@ export function InstitutionalPillars() {
           const counterObj = { val: 0 };
           gsap.to(counterObj, {
             val: targetValue,
-            duration: 1.4,
+            duration: 1.5,
             ease: "power2.out",
             scrollTrigger: {
-              trigger: triggerEl,
+              trigger: gridRef.current,
               start: "top 88%",
-              toggleActions: "play none none reverse",
+              once: true,
             },
             onUpdate: () => {
               const formatted = isDecimal ? counterObj.val.toFixed(1) : Math.round(counterObj.val).toString();
@@ -114,10 +80,9 @@ export function InstitutionalPillars() {
           });
         });
       }
-    }, sectionRef);
-
-    return () => ctx.revert();
-  }, []);
+    },
+    { scope: sectionRef }
+  );
 
   return (
     <section
@@ -126,9 +91,8 @@ export function InstitutionalPillars() {
       className="w-full border-b border-[var(--border-subtle)]/30 bg-[var(--bg-secondary)]/50 py-10 sm:py-14 relative shadow-2xs overflow-hidden"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
         <div className="relative flex items-center justify-between pb-4 border-b border-[var(--border-subtle)]/25 mb-8 text-[var(--text-muted)]">
-          {/* Linha de energia Rose Gold desenhada pelo scroll */}
+          {/* Linha Rose Gold desenhada pelo scroll */}
           <div
             ref={lineRef}
             className="absolute -bottom-[1px] left-0 right-0 h-[2px] bg-gradient-to-r from-[#A6766A] via-[#D4A396] to-transparent will-change-transform"
@@ -229,7 +193,6 @@ export function InstitutionalPillars() {
             </p>
           </div>
         </div>
-
       </div>
     </section>
   );
