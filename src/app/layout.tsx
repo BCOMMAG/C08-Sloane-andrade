@@ -19,7 +19,8 @@ const mulish = Mulish({
   display: "swap",
 });
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://sloaneandrade.pages.dev";
+const siteUrl = "https://sloaneandrade.pages.dev";
+const ogImageUrl = `${siteUrl}/og-image_2_optimized_300.jpg`;
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -54,9 +55,11 @@ export const metadata: Metadata = {
     siteName: "Sloane Andrade Advocacia",
     images: [
       {
-        url: "/og-image_2_optimized_300.jpg",
+        url: ogImageUrl,
+        secureUrl: ogImageUrl,
         width: 1200,
         height: 630,
+        type: "image/jpeg",
         alt: "Sloane Andrade Advocacia",
       },
     ],
@@ -66,7 +69,7 @@ export const metadata: Metadata = {
     title: "Sloane Andrade Advocacia | Guaíra - SP",
     description:
       "Segurança jurídica e atuação estratégica na defesa dos seus direitos e do seu trabalho. Dra. Sloane Ferreira de Andrade OAB/SP 463.336.",
-    images: ["/og-image_2_optimized_300.jpg"],
+    images: [ogImageUrl],
   },
   robots: {
     index: true,
@@ -81,6 +84,7 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
+      { url: "/favicon.ico", sizes: "any" },
       { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
       { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
       { url: "/favicon-android-chrome-192x192.png", sizes: "192x192", type: "image/png" },
@@ -107,6 +111,16 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <head>
+        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/favicon-apple-touch-icon180x180.png" />
+        <meta property="og:image" content={ogImageUrl} />
+        <meta property="og:image:secure_url" content={ogImageUrl} />
+        <meta property="og:image:type" content="image/jpeg" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:image:alt" content="Sloane Andrade Advocacia" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
