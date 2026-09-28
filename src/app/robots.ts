@@ -1,11 +1,15 @@
-﻿import { MetadataRoute } from 'next';
+import { MetadataRoute } from "next";
+
+export const dynamic = "force-static";
+
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://sloaneandrade.pages.dev";
 
 export default function robots(): MetadataRoute.Robots {
   return {
     rules: {
-      userAgent: '*',
-      allow: '/',
+      userAgent: "*",
+      allow: "/",
     },
-    sitemap: 'https://sloaneandrade-adv.vercel.app/sitemap.xml',
+    sitemap: `${siteUrl}/sitemap.xml`,
   };
 }

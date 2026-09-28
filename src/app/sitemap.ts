@@ -1,20 +1,23 @@
-﻿import { MetadataRoute } from 'next';
+import { MetadataRoute } from "next";
+
+export const dynamic = "force-static";
+
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://sloaneandrade.pages.dev";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://sloaneandrade-adv.vercel.app';
   const lastModified = new Date();
 
   return [
     {
-      url: baseUrl,
+      url: siteUrl,
       lastModified,
-      changeFrequency: 'weekly',
+      changeFrequency: "weekly",
       priority: 1.0,
     },
     {
-      url: `${baseUrl}/links`,
+      url: `${siteUrl}/links`,
       lastModified,
-      changeFrequency: 'monthly',
+      changeFrequency: "monthly",
       priority: 0.8,
     },
   ];
